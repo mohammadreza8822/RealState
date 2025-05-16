@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import connectDB from "@/utils/connectDB";
 import { Types } from "mongoose";
+import connectDB from "@/utils/connectDB";
 import User from "@/models/User";
 import Profile from "@/models/Profile";
 
@@ -10,6 +10,7 @@ export async function POST(req) {
     await connectDB();
 
     const body = await req.json();
+
     const {
       title,
       description,
@@ -18,10 +19,10 @@ export async function POST(req) {
       realState,
       price,
       constructionDate,
+      category,
       amenities,
       rules,
-      category,
-    } = body;
+    } = body.profileData;
 
     const session = await getServerSession(req);
     if (!session) {
@@ -43,8 +44,8 @@ export async function POST(req) {
 
     if (
       !title ||
-      !description ||
       !location ||
+      !description ||
       !phone ||
       !realState ||
       !price ||
