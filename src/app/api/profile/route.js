@@ -103,7 +103,7 @@ export async function PATCH(req) {
       category,
       amenities,
       rules,
-    } = body.profileData;
+    } = body;
 
     const session = await getServerSession(req);
     if (!session) {

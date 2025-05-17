@@ -3,6 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Profile from "@/models/Profile";
 import connectDB from "@/utils/connectDB";
 import User from "@/models/User";
+import MyProfilesPage from "@/template/MyProfilesPage";
 
 async function MyProfiles() {
   await connectDB();
@@ -18,10 +19,8 @@ async function MyProfiles() {
       },
     },
   ]);
-  console.log(user);
-  const profiles = await Profile.find({ userId: session.user._id });
 
-  return <div>MyProfiles</div>;
+  return <MyProfilesPage profiles={user.profiles} />;
 }
 
 export default MyProfiles;
