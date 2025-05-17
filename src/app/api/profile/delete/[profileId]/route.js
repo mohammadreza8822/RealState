@@ -28,7 +28,7 @@ export async function DELETE(req, context) {
       );
     }
 
-    const profile = await Profile.findOne({ _id });
+    const profile = await Profile.findOne({ _id: id });
     if (!user._id.equals(profile.userId)) {
       return NextResponse.json(
         { error: "دسترسی شما به آگهی محدود شده است" },
