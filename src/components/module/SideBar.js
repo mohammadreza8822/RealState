@@ -22,6 +22,7 @@ function SideBar() {
             pathname: "/buy-residential",
             query: { category: Object.keys(query) },
           }}
+          key={Object.keys(query)}
         >
           {Object.values(query)}
         </Link>

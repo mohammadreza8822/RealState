@@ -12,7 +12,7 @@ function BuyResidentialPage({ data }) {
         {data.length ? null : (
           <p className={styles.text}>هیچ آگهی ثبت نشده است</p>
         )}
-        {data.data?.map((profile) => (
+        {data?.map((profile) => (
           <Card key={profile._id} data={profile} />
         ))}
       </div>
