@@ -12,7 +12,7 @@ function AdminCard({ data: { title, location, description, price, _id } }) {
 
   const deleteHandler = async () => {
     setLoading(true);
-    const res = await fetch(`/api/profile/delete/${_id}`, {
+    const res = await fetch(`/api/profile/published/${_id}`, {
       method: "DELETE",
     });
     const result = await res.json();
