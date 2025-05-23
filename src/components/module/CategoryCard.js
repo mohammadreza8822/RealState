@@ -5,7 +5,7 @@ import Image from "next/image";
 function CategoryCard({ title, name }) {
   return (
     <div className={styles.card}>
-      <Link href={`/but-residential?category=${name}`}>
+      <Link href={`/buy-residential?category=${name}`}>
         <Image
           src={`/images/${name}.png`}
           alt={title}
