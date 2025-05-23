@@ -3,6 +3,11 @@ import { yekan } from "@/utils/fonts";
 import "./globals.css";
 import NextAuthProvider from "@/provides/NextAuthProvider";
 
+export const metadata = {
+  title: "املاک | پروژه کاآموزی",
+  description: "سایت خرید و فروش املاک",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">

@@ -7,6 +7,10 @@ import connectDB from "@/utils/connectDB";
 import AdminPage from "@/template/AdminPage";
 import DashboardSidebar from "@/layout/DashboardSidebar";
 
+export const metadata = {
+  title: "املاک | پنل کاربری",
+};
+
 async function Admin() {
   await connectDB();
   const session = await getServerSession(authOptions);
