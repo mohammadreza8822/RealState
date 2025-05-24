@@ -1,7 +1,7 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
 
 async function BuyResidential({ searchParams }) {
-  const res = await fetch(`${process.env.BASE_URL}/api/profile`, {
+  const res = await fetch("/api/profile", {
     cache: "no-store",
   });
   const data = await res.json();
