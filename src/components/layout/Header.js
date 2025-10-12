@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 
 function Header() {
   const { data } = useSession();
+  const isSuperAdmin = data?.user?.role === "SUPERADMIN";
 
   return (
     <header className={styles.header}>
@@ -18,6 +19,17 @@ function Header() {
           </li>
           <li>
             <Link href="/buy-residential">آگهی ها</Link>
+          </li>
+          {isSuperAdmin && (
+            <li>
+              <Link href="/user-access">دسترسی کاربران</Link>
+            </li>
+          )}
+          <li>
+            <Link href="/about">درباره ما</Link>
+          </li>
+          <li>
+            <Link href="/contact">تماس با ما</Link>
           </li>
         </ul>
       </div>

@@ -1,0 +1,54 @@
+.container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.container h1 {
+  text-align: center;
+  color: #304ffe;
+  margin-bottom: 2rem;
+}
+
+.container p {
+  text-align: justify;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature {
+  background-color: #f5f5f5;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.feature h3 {
+  color: #304ffe;
+  margin-bottom: 1rem;
+}
+
+.feature ul {
+  list-style: none;
+  padding: 0;
+}
+
+.feature ul li {
+  margin: 0.5rem 0;
+  padding-right: 20px;
+  position: relative;
+}
+
+.feature ul li:before {
+  content: "•";
+  color: #304ffe;
+  position: absolute;
+  right: 0;
+}
