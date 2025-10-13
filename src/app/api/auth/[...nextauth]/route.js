@@ -6,6 +6,20 @@ import connectDB from "@/utils/connectDB";
 
 export const authOptions = {
   session: { strategy: "jwt" },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
@@ -26,7 +40,7 @@ export const authOptions = {
         const isValid = verifyPassword(password, user.password);
         if (!isValid) throw new Error("ایمیل یا رمز عبور اشتباه است.");
 
-        return { email };
+        return { email, role: user.role };
       },
     }),
   ],

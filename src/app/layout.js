@@ -4,7 +4,7 @@ import "./globals.css";
 import NextAuthProvider from "@/provides/NextAuthProvider";
 
 export const metadata = {
-  title: "املاک | پروژه کاآموزی",
+  title: "سامانه خرید و فروش املاک",
   description: "سایت خرید و فروش املاک",
 };
 

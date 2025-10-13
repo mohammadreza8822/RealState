@@ -59,3 +59,28 @@
 .removeButton:hover {
   background-color: #d32f2f;
 }
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.loginButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  background-color: #304ffe;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: #1a237e;
+}

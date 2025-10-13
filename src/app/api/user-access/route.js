@@ -5,7 +5,11 @@ import connectDB from "@/utils/connectDB";
 export async function GET() {
   try {
     await connectDB();
-    const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
+    // فیلتر کردن کاربران - عدم نمایش SUPERADMIN ها
+    const users = await User.find(
+      { role: { $ne: "SUPERADMIN" } },
+      { password: 0 }
+    ).sort({ createdAt: -1 });
     return NextResponse.json({ data: users }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
@@ -29,6 +33,14 @@ export async function PATCH(req) {
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json({ error: "کاربر یافت نشد" }, { status: 404 });
+    }
+
+    // چک کردن اینکه کاربر SUPERADMIN نباشد
+    if (user.role === "SUPERADMIN") {
+      return NextResponse.json(
+        { error: "امکان تغییر نقش SUPERADMIN وجود ندارد" },
+        { status: 403 }
+      );
     }
 
     user.role = role;
