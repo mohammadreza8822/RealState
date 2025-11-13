@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import styles from "@/template/AddProfilePage.module.css";
 import RadioList from "@/module/RadioList";
 import TextInput from "@/module/TextInput";
 import TextList from "@/module/TextList";
@@ -79,8 +78,10 @@ function AddProfilePage({ data }) {
   };
 
   return (
-    <div className={styles.container}>
-      <h3>{data ? "ویرایش آگهی" : "ثبت آگهی"}</h3>
+    <div className="flex flex-col mb-40 animate-fadeIn">
+      <h3 className="text-2xl text-primary bg-primary/10 rounded-xl px-4 py-3 mb-20">
+        {data ? "ویرایش آگهی" : "ثبت آگهی"}
+      </h3>
       <TextInput
         title="عنوان آگهی"
         name="title"
@@ -139,11 +140,17 @@ function AddProfilePage({ data }) {
       {loading ? (
         <Loader />
       ) : data ? (
-        <button className={styles.submit} onClick={editHandler}>
+        <button
+          className="bg-primary text-white text-base rounded-lg px-4 py-3 hover:scale-105 transition-transform duration-200"
+          onClick={editHandler}
+        >
           ویرایش آگهی
         </button>
       ) : (
-        <button className={styles.submit} onClick={submitHandler}>
+        <button
+          className="bg-primary text-white text-base rounded-lg px-4 py-3 hover:scale-105 transition-transform duration-200"
+          onClick={submitHandler}
+        >
           ثبت آگهی
         </button>
       )}

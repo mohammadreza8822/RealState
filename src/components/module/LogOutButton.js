@@ -2,12 +2,14 @@
 
 import { signOut } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
-import styles from "@/module/LogOutButton.module.css";
 
 function LogOutButton() {
   return (
-    <button className={styles.button} onClick={signOut}>
-      <FiLogOut />
+    <button
+      onClick={signOut}
+      className="flex items-center w-full text-right text-base text-red-600 mt-5 hover:text-red-700 transition-colors duration-200"
+    >
+      <FiLogOut className="ml-2 text-xl" />
       خروج
     </button>
   );

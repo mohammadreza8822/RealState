@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import styles from "@/module/AdminCard.module.css";
 import { sp } from "@/utils/replaceNumber";
 
 function AdminCard({ data: { title, location, description, price, _id } }) {
@@ -37,26 +36,30 @@ function AdminCard({ data: { title, location, description, price, _id } }) {
   };
 
   return (
-    <div className={styles.container}>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <div className={styles.properties}>
-        <span>{location}</span>
-        <span>{sp(price)}</span>
+    <div className="border-b-2 border-primary pb-3 mb-20 animate-fadeIn">
+      <h3 className="text-xl text-primary mb-5">{title}</h3>
+      <p className="text-justify text-gray-700 mb-5 leading-7">{description}</p>
+      <div className="flex mb-5">
+        <span className="bg-primary/20 text-primary px-3 py-1.5 ml-4 rounded-md">
+          {location}
+        </span>
+        <span className="bg-primary/20 text-primary px-3 py-1.5 rounded-md">
+          {sp(price)} تومان
+        </span>
       </div>
-      <button onClick={publishHandler}>انتشار</button>
-      <Link href={`/buy-residential/${_id}`}>
-        <button style={{ backgroundColor: "blue", marginRight: "10px" }}>
-          مشاهده جزئیات
+      <div className="flex gap-3 mt-5">
+        <button
+          onClick={publishHandler}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-200"
+        >
+          انتشار
         </button>
-      </Link>
-      <button
-        style={{ backgroundColor: "red", marginRight: "10px" }}
-        onClick={deleteHandler}
-      >
-        حذف آگهی
-      </button>
-      <Toaster />
+        <Link href={`/buy-residential/${_id}`}>
+          <button className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-all duration-200">
+            مشاهده جزئیات
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

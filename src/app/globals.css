@@ -1,18 +1,26 @@
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* فقط اینا رو نگه دار، بقیه رو حذف کن */
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  font-weight: 200;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+}
+
 body {
+  margin: 0;
+  padding: 100px 10px 20px 10px;
   max-width: 1200px;
+  margin-inline: auto;
   overflow-x: hidden;
-  margin: auto;
-  padding: 0 10px;
 }
 
+/* فونت رو از Tailwind بگیر، نه از * */
 a {
   color: inherit;
   text-decoration: none;
@@ -21,6 +29,7 @@ a {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font-family: inherit;
 }

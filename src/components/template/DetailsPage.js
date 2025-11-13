@@ -5,7 +5,6 @@ import { AiOutlinePhone } from "react-icons/ai";
 import { e2p, sp } from "@/utils/replaceNumber";
 import ItemList from "@/module/ItemList";
 import Title from "@/module/Title";
-import styles from "@/template/DetailsPage.module.css";
 import ShareButton from "@/module/ShareButton";
 import { icons } from "@/constants/icons";
 
@@ -31,38 +30,38 @@ function DetailsPage({
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.main}>
-        <h1>{title}</h1>
-        <span>
-          <HiOutlineLocationMarker />
+    <div className="flex flex-col md:flex-row justify-between gap-10 p-4 md:p-8">
+      <div className="flex-[3] space-y-8">
+        <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
+        <span className="flex items-center gap-2 text-gray-600">
+          <HiOutlineLocationMarker className="text-primary-700" />
           {location}
         </span>
         <Title>توضیحات</Title>
-        <p>{description}</p>
+        <p className="text-gray-700 leading-7">{description}</p>
         <Title>امکانات</Title>
         <ItemList data={amenities} />
         <Title>قوانین</Title>
         <ItemList data={rules} />
       </div>
-      <div className={styles.sidebar}>
-        <div className={styles.realState}>
-          <SiHomebridge />
-          <p>املاک {realState}</p>
-          <span>
-            <AiOutlinePhone />
+      <div className="flex-1 space-y-6">
+        <div className="bg-gray-100 p-4 rounded-lg space-y-4">
+          <SiHomebridge className="text-primary-600 text-xl" />
+          <p className="font-bold">املاک {realState}</p>
+          <span className="flex items-center gap-2 text-gray-600">
+            <AiOutlinePhone className="text-primary-600" />
             {e2p(phone)}
           </span>
         </div>
         <ShareButton />
-        <div className={styles.price}>
-          <p>
+        <div className="bg-gray-100 p-4 rounded-lg space-y-4">
+          <p className="flex items-center gap-2 text-gray-700">
             {icons[category]}
             {categories[category]}
           </p>
-          <p>{sp(price)} تومان</p>
-          <p>
-            <BiCalendarCheck />
+          <p className="text-lg font-bold text-gray-800">{sp(price)} تومان</p>
+          <p className="flex items-center gap-2 text-gray-600">
+            <BiCalendarCheck className="text-primary-600" />
             {new Date(constructionDate).toLocaleString("fa", "ir")}
           </p>
         </div>

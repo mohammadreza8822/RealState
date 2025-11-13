@@ -1,4 +1,3 @@
-import styles from "@/module/SideBar.module.css";
 import Link from "next/link";
 import { HiFilter } from "react-icons/hi";
 
@@ -10,12 +9,17 @@ function SideBar() {
     { store: "مغازه" },
   ];
   return (
-    <div className={styles.container}>
-      <p>
-        <HiFilter />
+    <div className="flex flex-col animate-fadeIn">
+      <p className="flex items-center text-xl mb-4">
+        <HiFilter className="ml-2 text-2xl text-primary" />
         دسته بندی
       </p>
-      <Link href={"/buy-residential"}>همه</Link>
+      <Link
+        href="/buy-residential"
+        className="text-gray-600 hover:text-primary my-1.5 transition-colors duration-200"
+      >
+        همه
+      </Link>
       {queries.map((query) => (
         <Link
           href={{
@@ -23,6 +27,7 @@ function SideBar() {
             query: { category: Object.keys(query) },
           }}
           key={Object.keys(query)}
+          className="text-gray-600 hover:text-primary my-1.5 transition-colors duration-200"
         >
           {Object.values(query)}
         </Link>

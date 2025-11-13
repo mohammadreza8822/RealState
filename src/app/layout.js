@@ -1,6 +1,6 @@
+import "../app/globals.css";
 import Layout from "@/layout/Layout";
 import { yekan } from "@/utils/fonts";
-import "./globals.css";
 import NextAuthProvider from "@/provides/NextAuthProvider";
 
 export const metadata = {

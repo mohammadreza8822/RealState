@@ -1,11 +1,12 @@
 import AdminCard from "@/module/AdminCard";
-import styles from "@/template/AdminPage.module.css";
 
 function AdminPage({ profiles }) {
   return (
-    <div>
+    <div className="animate-fadeIn">
       {profiles.length ? null : (
-        <p className={styles.text}>هیچ آگهی در اتنظار تاییدی وجود ندارد</p>
+        <p className="text-center text-lg text-gray-500 my-10">
+          هیچ آگهی در انتظار تاییدی وجود ندارد
+        </p>
       )}
       {profiles.map((i) => (
         <AdminCard key={i._id} data={JSON.parse(JSON.stringify(i))} />

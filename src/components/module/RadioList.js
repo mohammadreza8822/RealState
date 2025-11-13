@@ -1,5 +1,3 @@
-import styles from "@/module/RadioList.module.css";
-
 function RadioList({ profileData, setProfileData }) {
   const { category } = profileData;
 
@@ -8,56 +6,45 @@ function RadioList({ profileData, setProfileData }) {
     setProfileData({ ...profileData, [name]: value });
   };
 
-  return (
-    <div className={styles.container}>
-      <p>دسته بندی</p>
-      <div className={styles.main}>
-        <div>
-          <label htmlFor="villa">ویلا</label>
-          <input
-            type="radio"
-            name="category"
-            value="villa"
-            id="villa"
-            checked={category === "villa"}
-            onChange={changeHandler}
-          />
-        </div>
-        <div>
-          <label htmlFor="apartment">آپارتمان</label>
-          <input
-            type="radio"
-            name="category"
-            value="apartment"
-            id="apartment"
-            checked={category === "apartment"}
-            onChange={changeHandler}
-          />
-        </div>
-        <div>
-          <label htmlFor="store">مغازه</label>
-          <input
-            type="radio"
-            name="category"
-            value="store"
-            id="store"
-            checked={category === "store"}
-            onChange={changeHandler}
-          />
-        </div>
+  const radioItems = [
+    { id: "villa", label: "ویلا" },
+    { id: "apartment", label: "آپارتمان" },
+    { id: "store", label: "مغازه" },
+    { id: "office", label: "دفتر" },
+  ];
 
-        <div>
-          <label htmlFor="office">دفتر</label>
-          <input
-            type="radio"
-            name="category"
-            value="office"
-            id="office"
-            checked={category === "office"}
-            onChange={changeHandler}
-          />
-        </div>
+  return (
+    <div className="mb-10">
+      <p className="text-lg mb-2">دسته بندی</p>
+      <div className="flex flex-wrap gap-4">
+        {radioItems.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center justify-between bg-primary/10 text-primary px-3 py-1.5 rounded-md cursor-pointer min-w-[70px] hover:bg-primary/20 transition-colors duration-200"
+          >
+            <label htmlFor={item.id} className="cursor-pointer">
+              {item.label}
+            </label>
+            <input
+              type="radio"
+              name="category"
+              value={item.id}
+              id={item.id}
+              checked={category === item.id}
+              onChange={changeHandler}
+              className="cursor-pointer"
+            />
+          </div>
+        ))}
       </div>
+      <input
+        type="radio"
+        name="category"
+        value="office"
+        id="office"
+        checked={category === "office"}
+        onChange={changeHandler}
+      />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { FiEdit } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
-import styles from "@/module/DashboardCard.module.css";
 import Card from "./Card";
 import { useState } from "react";
 import Loader from "./Loader";
@@ -33,18 +32,24 @@ function DashboardCard({ data }) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="flex border-2 border-primary/30 rounded-2xl mb-5 hover:shadow-md transition-all duration-200">
       <Card data={data} />
-      <div className={styles.main}>
-        <button onClick={editHandler}>
-          ویرایش <FiEdit />
+      <div className="flex items-end justify-between p-3 w-full">
+        <button
+          onClick={editHandler}
+          className="flex justify-center items-center w-[48%] bg-white border border-green-600 text-green-600 h-10 rounded-lg text-base hover:bg-green-600 hover:text-white transition-all duration-200"
+        >
+          ویرایش <FiEdit className="mr-2 text-lg" />
         </button>
         {loading ? (
           <Loader />
         ) : (
-          <button onClick={deleteHandler}>
+          <button
+            onClick={deleteHandler}
+            className="flex justify-center items-center w-[48%] bg-white border border-red-600 text-red-600 h-10 rounded-lg text-base hover:bg-red-600 hover:text-white transition-all duration-200"
+          >
             حذف آگهی
-            <AiOutlineDelete />
+            <AiOutlineDelete className="mr-2 text-lg" />
           </button>
         )}
       </div>
