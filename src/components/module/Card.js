@@ -3,12 +3,18 @@ import { BiLeftArrowAlt } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { sp } from "@/utils/replaceNumber";
 import { icons } from "@/constants/icons";
+import FavoriteButton from "../module/FavoriteButton.js";
 
 function Card({ data: { _id, category, title, location, price } }) {
   return (
     <div className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-[#304ffe]/20">
       {/* بک‌گراند گرادیانت ظریف هنگام هاور */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#304ffe]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+      {/* قلب ذخیره — گوشه بالا چپ */}
+      <div className="absolute top-4 left-4 z-10">
+        <FavoriteButton adId={_id} />
+      </div>
 
       {/* آیکون دسته‌بندی — لوکس و بزرگ */}
       <div className="p-5">
@@ -39,7 +45,7 @@ function Card({ data: { _id, category, title, location, price } }) {
         </div>
       </div>
 
-      {/* دکمه مشاهده آگهی — انیمیشن دار و خفن */}
+      {/* دکمه مشاهده آگهی */}
       <div className="px-5 pb-5">
         <Link
           href={`/buy-residential/${_id}`}

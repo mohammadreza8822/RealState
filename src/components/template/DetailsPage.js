@@ -1,15 +1,16 @@
-import { BiCalendarCheck, BiPhoneCall } from "react-icons/bi";
+import { BiCalendarCheck } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { SiHomebridge } from "react-icons/si";
-import { MdOutlineCategory } from "react-icons/md";
-import { e2p, sp } from "@/utils/replaceNumber";
+import { sp } from "@/utils/replaceNumber";
 import ItemList from "@/module/ItemList";
 import Title from "@/module/Title";
 import ShareButton from "@/module/ShareButton";
 import { icons } from "@/constants/icons";
+import FavoriteButton from "../module/FavoriteButton.js";
 
 function DetailsPage({
   data: {
+    _id, // این رو اضافه کن
     title,
     description,
     location,
@@ -29,7 +30,6 @@ function DetailsPage({
     office: "دفتر اداری",
   };
 
-  // تبدیل تاریخ به فارسی
   const persianDate = new Date(constructionDate).toLocaleDateString("fa-IR", {
     year: "numeric",
     month: "long",
@@ -42,14 +42,23 @@ function DetailsPage({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* بخش اصلی آگهی */}
           <div className="lg:col-span-2 space-y-10">
-            {/* عنوان و مکان */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-              <h1 className="text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
-                {title}
-              </h1>
-              <div className="flex items-center gap-3 text-lg text-gray-600">
-                <HiOutlineLocationMarker className="text-2xl text-[#304ffe]" />
-                <span className="font-medium">{location}</span>
+            {/* عنوان + قلب ذخیره — اینجا اضافه شد */}
+            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+              <div className="flex items-start justify-between gap-6">
+                <div className="flex-1">
+                  <h1 className="text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
+                    {title}
+                  </h1>
+                  <div className="flex items-center gap-3 text-lg text-gray-600">
+                    <HiOutlineLocationMarker className="text-2xl text-[#304ffe]" />
+                    <span className="font-medium">{location}</span>
+                  </div>
+                </div>
+
+                {/* قلب بزرگ و زیبا — مخصوص صفحه جزئیات */}
+                <div className="flex-shrink-0">
+                  <FavoriteButton adId={_id} size="large" />
+                </div>
               </div>
             </div>
 
@@ -64,10 +73,7 @@ function DetailsPage({
             {/* امکانات */}
             {amenities?.length > 0 && (
               <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <Title
-                  title="امکانات رفاهی"
-                  icon={<span className="text-2xl">Check</span>}
-                />
+                <Title title="امکانات رفاهی" />
                 <ItemList data={amenities} />
               </div>
             )}
@@ -75,10 +81,7 @@ function DetailsPage({
             {/* قوانین */}
             {rules?.length > 0 && (
               <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <Title
-                  title="قوانین"
-                  icon={<span className="text-2xl">Warning</span>}
-                />
+                <Title title="قوانین" />
                 <ItemList data={rules} />
               </div>
             )}
@@ -105,12 +108,11 @@ function DetailsPage({
                   href={`tel:${phone}`}
                   className="flex items-center justify-center gap-3 w-full bg-[#304ffe] text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 hover:shadow-xl transform hover:scale-105 transition-all duration-300 shadow-lg"
                 >
-                  <BiPhoneCall className="text-2xl" />
                   تماس با مشاور
                 </a>
 
                 <div className="text-center">
-                  <p className="text-2xl font-black text-[#304ffe]">
+                  <p className="text-3xl font-black text-[#304ffe]">
                     {sp(price)} تومان
                   </p>
                 </div>
@@ -139,7 +141,6 @@ function DetailsPage({
               </div>
             </div>
 
-            {/* دکمه اشتراک‌گذاری */}
             <div className="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
               <ShareButton />
             </div>

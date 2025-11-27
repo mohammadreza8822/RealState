@@ -8,6 +8,11 @@ const userSchema = new Schema({
     enum: ["SUPERADMIN", "ADMIN", "USER"],
     default: "USER",
   },
+  favorites: {
+    type: [Schema.Types.ObjectId],
+    ref: "Profile",
+    default: [],
+  },
   createdAt: { type: Date, default: () => Date.now(), immutable: true },
 });
 

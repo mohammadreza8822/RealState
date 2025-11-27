@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FiLogIn, FiMenu, FiX } from "react-icons/fi";
+import { FiLogIn, FiMenu, FiX, FiHeart } from "react-icons/fi"; // FiHeart اضافه شد
 import { FaUserAlt } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import HomeIcon from "@/public/images/home-icon.svg";
@@ -9,10 +9,21 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 
 function Header() {
-  const { data } = useSession();
+  const { data, status } = useSession();
   const isSuperAdmin = data?.user?.role === "SUPERADMIN";
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [favoritesCount, setFavoritesCount] = useState(0);
+
+  // تعداد علاقه‌مندی‌ها رو از سرور بگیر (اختیاری ولی خفن!)
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch("/api/favorites/count", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => setFavoritesCount(data.count || 0))
+        .catch(() => setFavoritesCount(0));
+    }
+  }, [status]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +47,7 @@ function Header() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "bg-white/90 backdrop-blur-xl shadow-2xl py-3" : "py-6"
+          isScrolled ? "bg-white/95 backdrop-blur-xl shadow-2xl py-3" : "py-6"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6">
@@ -58,7 +69,6 @@ function Header() {
                 </span>
               </Link>
 
-              {/* منوی دسکتاپ — متن‌ها آبی شدن */}
               <nav className="hidden lg:flex items-center gap-8">
                 {navItems.map((item) => (
                   <Link
@@ -72,17 +82,36 @@ function Header() {
               </nav>
             </div>
 
-            {/* دکمه ورود/داشبورد + منوی موبایل */}
+            {/* دکمه‌ها + منوی موبایل */}
             <div className="flex items-center gap-4">
+              {/* فقط وقتی لاگین کرده — دکمه علاقه‌مندی‌ها و داشبورد */}
               {data ? (
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-                >
-                  <FaUserAlt className="text-xl" />
-                  داشبورد
-                </Link>
+                <>
+                  {/* دکمه علاقه‌مندی‌ها — قرمز و خفن */}
+                  <Link
+                    href="/favorites"
+                    className="relative flex items-center gap-3 bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  >
+                    <FiHeart className="text-xl" />
+                    علاقه‌مندی‌ها
+                    {favoritesCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-white text-red-500 text-xs font-black w-6 h-6 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                        {favoritesCount}
+                      </span>
+                    )}
+                  </Link>
+
+                  {/* دکمه داشبورد */}
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-3 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  >
+                    <FaUserAlt className="text-xl" />
+                    داشبورد
+                  </Link>
+                </>
               ) : (
+                /* دکمه ورود */
                 <Link
                   href="/signin"
                   className="flex items-center gap-3 bg-white text-[#304ffe] px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-[#304ffe]"
@@ -92,10 +121,10 @@ function Header() {
                 </Link>
               )}
 
-              {/* دکمه همبرگری موبایل */}
+              {/* همبرگری موبایل */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`lg:hidden p-3 rounded-xl ${
+                className={`lg:hidden p-3 rounded-xl transition-all ${
                   isScrolled
                     ? "bg-gray-100 text-gray-800"
                     : "bg-white/20 text-white"
@@ -110,7 +139,7 @@ function Header() {
             </div>
           </div>
 
-          {/* منوی موبایل — متن‌ها آبی */}
+          {/* منوی موبایل — با علاقه‌مندی‌ها */}
           {isMobileMenuOpen && (
             <div className="lg:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl border-t border-gray-200">
               <nav className="flex flex-col py-6 px-8">
@@ -124,6 +153,23 @@ function Header() {
                     {item.label}
                   </Link>
                 ))}
+
+                {/* علاقه‌مندی‌ها تو منوی موبایل */}
+                {data && (
+                  <Link
+                    href="/favorites"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="py-4 text-lg font-bold text-red-500 flex items-center gap-3 border-b border-gray-100"
+                  >
+                    <FiHeart className="text-xl fill-current" />
+                    علاقه‌مندی‌های من
+                    {favoritesCount > 0 && (
+                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                        {favoritesCount}
+                      </span>
+                    )}
+                  </Link>
+                )}
               </nav>
             </div>
           )}
