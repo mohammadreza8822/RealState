@@ -278,7 +278,7 @@ export default function HomePage() {
 
                   <div className="mt-10">
                     <Link
-                      href="/join-us"
+                      href="/signup"
                       className="inline-flex items-center gap-3 bg-white text-[#304ffe] px-10 py-5 rounded-full font-bold text-lg shadow-xl hover:scale-105 transition-all duration-300"
                     >
                       همین حالا درخواست بده
