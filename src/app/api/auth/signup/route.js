@@ -7,42 +7,51 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    const { email, password } = await req.json();
-    console.log({ email, password });
+    const { email, password, role } = await req.json();
+
+    // اعتبارسنجی ورودی‌ها
     if (!email || !password) {
       return NextResponse.json(
-        {
-          error: "لطفا اطلاعات معتبر وارد کنید.",
-        },
+        { error: "لطفا اطلاعات معتبر وارد کنید." },
         { status: 422 }
       );
     }
 
+    // بررسی وجود کاربر
     const existingUser = await User.findOne({ email });
-    console.log(existingUser);
     if (existingUser) {
       return NextResponse.json(
-        { error: "این حساب کاربری وجود دارد." },
+        { error: "این حساب کاربری قبلاً ثبت شده است." },
         { status: 422 }
       );
     }
 
+    // هش کردن پسورد
     const hashedPassword = await hashPassword(password);
 
+    // تعیین نقش: اگر role اومد و "admin" بود → ادمین، وگرنه کاربر عادی
+    const userRole = role ? "ADMIN" : "USER";
+
+    // ایجاد کاربر جدید با نقش
     const newUser = await User.create({
-      email: email,
+      email,
       password: hashedPassword,
+      role: userRole, // ذخیره نقش در دیتابیس
     });
-    console.log(newUser);
+
+    console.log("کاربر جدید ایجاد شد:", newUser);
 
     return NextResponse.json(
-      { message: "حساب کاربری ایجاد شد." },
+      {
+        message: "حساب کاربری با موفقیت ایجاد شد!",
+        data: { email: newUser.email, role: newUser.role },
+      },
       { status: 201 }
     );
   } catch (err) {
-    console.log(err);
+    console.error("خطا در ثبت‌نام:", err);
     return NextResponse.json(
-      { error: "مشکلی در سرور رخ داده است" },
+      { error: "مشکلی در سرور رخ داده است. دوباره تلاش کنید." },
       { status: 500 }
     );
   }

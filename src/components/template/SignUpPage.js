@@ -10,29 +10,38 @@ function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [isConsultant, setIsConsultant] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const signUpHandler = async (e) => {
     e.preventDefault();
+
     if (password !== rePassword) {
       toast.error("رمز و تکرار آن برابر نیست!");
       return;
     }
+
     setLoading(true);
+
+    // اگر تیک "مشاور" زده شده بود → در واقع ادمین است!
+    const role = isConsultant ? "admin" : "user";
+
     const res = await fetch("/api/auth/signup", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, role }), // نقش ارسال میشه
       headers: { "Content-Type": "application/json" },
     });
+
     const data = await res.json();
     setLoading(false);
+
     if (res.status === 201) {
+      toast.success("ثبت‌نام با موفقیت انجام شد!");
       router.push("/signin");
-      toast.success(data.message);
     } else {
-      toast.error(data.error);
+      toast.error(data.error || "خطایی رخ داد");
     }
   };
 
@@ -63,8 +72,19 @@ function SignUpPage() {
           type="password"
           value={rePassword}
           onChange={(e) => setRePassword(e.target.value)}
-          className="mb-10 w-[250px] border border-[#304ffe] border-dashed text-gray-500 rounded-md p-2.5 ltr h-10 text-base focus:border-solid focus:outline-none"
+          className="mb-5 w-[250px] border border-[#304ffe] border-dashed text-gray-500 rounded-md p-2.5 ltr h-10 text-base focus:border-solid focus:outline-none"
         />
+        <div className="flex w-full items-center mb-10">
+          <label className="text-[#304ffe] font-normal">
+            میخواهید مشاور شوید ؟
+          </label>
+          <input
+            type="checkbox"
+            value={isConsultant}
+            onChange={(e) => setIsConsultant(e.target.checked)}
+            className="mr-2"
+          />
+        </div>
         {loading ? (
           <div className="flex justify-center">
             <Loader />

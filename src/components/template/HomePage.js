@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaCity } from "react-icons/fa";
 import { FiCheckCircle } from "react-icons/fi";
 import CategoryCard from "@/module/CategoryCard";
@@ -8,6 +12,26 @@ import { cities, services } from "@/constants/strings";
 import Link from "next/link";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  // استیت‌های سرچ
+  const [query, setQuery] = useState("");
+  const [transaction, setTransaction] = useState("خرید");
+  const [propertyType, setPropertyType] = useState("همه املاک");
+
+  // تابع جستجو
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (transaction !== "خرید") params.set("transaction", transaction);
+    if (propertyType !== "همه املاک") params.set("type", propertyType);
+
+    const url = params.toString() ? `/search?${params.toString()}` : "/search";
+    router.push(url);
+  };
+
   return (
     <>
       {/* بک‌گراند سفید تمیز */}
@@ -15,7 +39,7 @@ export default function HomePage() {
 
       <div className="relative">
         <div className="container mx-auto px-4 py-12">
-          {/* هیرو — لوکس و حرفه‌ای */}
+          {/* هیرو — با سرچ بار کاملاً کارآمد */}
           <section className="relative max-w-7xl mx-auto rounded-3xl overflow-hidden shadow-2xl mb-24 mt-10">
             <Image
               src={heroBg}
@@ -31,20 +55,25 @@ export default function HomePage() {
               <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-2xl">
                 سامانه خرید و اجاره ملک
               </h1>
-              <p className="text-xl md:text-2xl text-gray-100 font-medium max-w-4xl mx-auto drop-shadow-lg">
+              <p className="text-xl md:text-2xl text-gray-100 font-medium max-w-4xl mx-auto drop-shadow-lg mb-12">
                 بهترین آگهی‌های مسکونی، تجاری و ویلایی با تضمین اصالت و مشاوره
                 رایگان
               </p>
-              {/* سرچ بار — لوکس و جذاب */}
-              {/* سرچ بار — ظریف، شیک و جمع‌وجور */}
-              <div className="relative max-w-3xl mx-auto mt-10">
-                <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden">
+
+              {/* سرچ بار — حالا واقعاً کار می‌کنه! */}
+              <div className="relative max-w-3xl mx-auto">
+                <form
+                  onSubmit={handleSearch}
+                  className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden"
+                >
                   <div className="flex flex-col sm:flex-row items-center p-3 gap-3">
                     {/* اینپوت اصلی */}
                     <div className="flex-1 relative">
                       <input
                         type="text"
                         placeholder="جستجو در آگهی‌ها، محله یا شهر..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
                         className="w-full px-12 py-4 pr-4 text-base text-gray-800 placeholder-gray-500 bg-transparent outline-none"
                       />
                       <svg
@@ -62,22 +91,28 @@ export default function HomePage() {
                       </svg>
                     </div>
 
-                    {/* دکمه جستجو — فقط در موبایل نمایش داده میشه */}
-                    <button className="sm:hidden w-full bg-[#304ffe] text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition">
+                    {/* دکمه موبایل */}
+                    <button
+                      type="submit"
+                      className="sm:hidden w-full bg-[#304ffe] text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition"
+                    >
                       جستجو
                     </button>
 
+                    {/* سلکت‌ها و دکمه دسکتاپ */}
                     <div className="hidden sm:flex items-center gap-4">
-                      {/* سلکت نوع معامله */}
+                      {/* نوع معامله */}
                       <div className="relative">
-                        <select className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 px-5 py-4 pl-10 pr-12 rounded-xl font-medium outline-none cursor-pointer hover:border-[#304ffe] transition-all duration-200 focus:border-[#304ffe] w-44">
+                        <select
+                          value={transaction}
+                          onChange={(e) => setTransaction(e.target.value)}
+                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 px-5 py-4 pl-5 pr-12 rounded-xl font-medium outline-none cursor-pointer hover:border-[#304ffe] focus:border-[#304ffe] transition w-32"
+                        >
                           <option>خرید</option>
                           <option>اجاره</option>
                           <option>رهن و اجاره</option>
                           <option>رهن کامل</option>
                         </select>
-
-                        {/* فلش سمت راست — استاندارد و تمیز */}
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                           <svg
                             className="w-5 h-5 text-gray-600"
@@ -95,9 +130,13 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* سلکت نوع ملک */}
+                      {/* نوع ملک */}
                       <div className="relative">
-                        <select className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 px-5 py-4 pl-10 pr-12 rounded-xl font-medium outline-none cursor-pointer hover:border-[#304ffe] transition-all duration-200 focus:border-[#304ffe] w-56">
+                        <select
+                          value={propertyType}
+                          onChange={(e) => setPropertyType(e.target.value)}
+                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 px-5 py-4 pl-6 pr-12 rounded-xl font-medium outline-none cursor-pointer hover:border-[#304ffe] focus:border-[#304ffe] transition w-40"
+                        >
                           <option>همه املاک</option>
                           <option>آپارتمان مسکونی</option>
                           <option>خانه ویلایی</option>
@@ -105,8 +144,6 @@ export default function HomePage() {
                           <option>دفتر اداری</option>
                           <option>زمین و کلنگی</option>
                         </select>
-
-                        {/* فلش سمت راست — کاملاً جدا از متن */}
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                           <svg
                             className="w-5 h-5 text-gray-600"
@@ -125,7 +162,10 @@ export default function HomePage() {
                       </div>
 
                       {/* دکمه جستجو */}
-                      <button className="bg-[#304ffe] text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-2 whitespace-nowrap">
+                      <button
+                        type="submit"
+                        className="bg-[#304ffe] text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-200 shadow-lg flex items-center gap-2"
+                      >
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -143,22 +183,21 @@ export default function HomePage() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </form>
 
-                {/* افکت نورانی ظریف */}
+                {/* افکت نورانی */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#304ffe]/20 to-cyan-400/20 blur-3xl -z-10 rounded-3xl" />
               </div>
             </div>
           </section>
 
-          {/* خدمات — کارت‌های شیک */}
+          {/* بقیه بخش‌ها بدون تغییر — فقط فاصله‌ها رو کمی بهینه کردم */}
           <section className="max-w-6xl mx-auto mb-24">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {services.map((service, i) => (
                 <div
                   key={i}
-                  className="group flex items-center gap-4 bg-white/95 backdrop-blur-sm rounded-2xl px-6 py-5 shadow-lg 
-                    hover:shadow-xl hover:bg-white hover:scale-105 transition-all duration-300 border border-blue-100"
+                  className="group flex items-center gap-4 bg-white/95 backdrop-blur-sm rounded-2xl px-6 py-5 shadow-lg hover:shadow-xl hover:bg-white hover:scale-105 transition-all duration-300 border border-blue-100"
                 >
                   <FiCheckCircle className="text-2xl text-[#304ffe] flex-shrink-0" />
                   <span className="font-medium text-gray-800 text-sm md:text-base">
@@ -169,7 +208,6 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* دسته‌بندی‌ها */}
           <section className="my-32">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">
               جستجو بر اساس نوع ملک
@@ -182,7 +220,6 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* شهرهای پربازدید */}
           <section className="my-24">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">
               شهرهای پربازدید
@@ -191,8 +228,7 @@ export default function HomePage() {
               {cities.slice(0, 8).map((city, i) => (
                 <div
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl bg-white/80 backdrop-blur-md border border-white/50 
-                    shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-500"
+                  className="group relative overflow-hidden rounded-3xl bg-white/80 backdrop-blur-md border border-white/50 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-500"
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-[#304ffe]/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
                   <div className="p-8 text-center relative z-10">
@@ -205,7 +241,7 @@ export default function HomePage() {
           </section>
         </div>
 
-        {/* بخش استخدام مشاور — کاملاً هماهنگ با فاصله‌ها */}
+        {/* بخش استخدام مشاور */}
         <section className="my-32 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="relative bg-gradient-to-r from-[#304ffe] to-blue-700 rounded-3xl overflow-hidden shadow-2xl">
@@ -215,14 +251,12 @@ export default function HomePage() {
 
               <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 p-12 md:p-16 text-white">
                 <div className="flex flex-col justify-center space-y-8">
-                  <div>
-                    <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                      ما در حال استخدام
-                      <br />
-                      <span className="text-cyan-300">مشاور املاک حرفه‌ای</span>
-                      هستیم!
-                    </h2>
-                  </div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+                    ما در حال استخدام
+                    <br />
+                    <span className="text-cyan-300">مشاور املاک حرفه‌ای</span>
+                    هستیم!
+                  </h2>
                   <p className="text-lg md:text-xl text-gray-100 leading-relaxed">
                     اگر عاشق املاک هستید، تجربه فروش دارید و دنبال درآمد بالا و
                     محیط پویا می‌گردید، همین حالا به تیم ما بپیوندید.
