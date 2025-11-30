@@ -16,6 +16,7 @@ function AddProfilePage({ data }) {
     location: "",
     phone: "",
     price: "",
+    size: "",
     realState: "",
     constructionDate: new Date(),
     category: "",
@@ -205,6 +206,12 @@ function AddProfilePage({ data }) {
       <TextInput
         title="قیمت(تومان)"
         name="price"
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
+      <TextInput
+        title="متراژ (متر مربع)"
+        name="size"
         profileData={profileData}
         setProfileData={setProfileData}
       />

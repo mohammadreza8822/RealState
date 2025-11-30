@@ -1,12 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Card from "@/module/Card";
-import SideBar from "@/module/SideBar";
-import { FiHome } from "react-icons/fi";
-import { useSearchParams } from "next/navigation";
-import Image from "next/image";
+import { HiFilter, HiX } from "react-icons/hi";
+import AdvancedFilter from "@/module/AdvancedFilter";
 
-// تبدیل کلید به فارسی برای نمایش
 const categoryPersian = {
   villa: "ویلا",
   apartment: "آپارتمان",
@@ -14,107 +13,101 @@ const categoryPersian = {
   office: "دفتر",
 };
 
-function BuyResidentialPage({ data = [] }) {
+export default function BuyResidentialPage({ data: initialData = [] }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const currentCategory = searchParams.get("category") || "all";
-  const hasAds = data.length > 0;
 
-  // عنوان هوشمند بر اساس فیلتر
-  const pageTitle =
-    currentCategory === "all" || !currentCategory
-      ? "خرید ملک مسکونی"
-      : `خرید ${categoryPersian[currentCategory] || "ملک"}`;
+  // حالت باز/بسته بودن فیلتر در موبایل
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // خواندن مقادیر فیلتر از URL
+  const currentCategory = searchParams.get("category") || "all";
+  const minPrice = searchParams.get("minPrice") || "";
+  const maxPrice = searchParams.get("maxPrice") || "";
+  const minArea = searchParams.get("minArea") || "";
+  const maxArea = searchParams.get("maxArea") || "";
+
+  // حالت‌های فیلتر (محلی)
+  const [category, setCategory] = useState(currentCategory);
+  const [priceFrom, setPriceFrom] = useState(minPrice);
+  const [priceTo, setPriceTo] = useState(maxPrice);
+  const [areaFrom, setAreaFrom] = useState(minArea);
+  const [areaTo, setAreaTo] = useState(maxArea);
+
+  // وقتی URL تغییر کرد، فیلترها آپدیت بشن
+  useEffect(() => {
+    setCategory(currentCategory);
+    setPriceFrom(minPrice);
+    setPriceTo(maxPrice);
+    setAreaFrom(minArea);
+    setAreaTo(maxArea);
+  }, [searchParams]);
+
+  // اعمال فیلترها
+  const applyFilters = () => {
+    const params = new URLSearchParams();
+
+    if (category && category !== "all") params.set("category", category);
+    if (priceFrom) params.set("minPrice", priceFrom);
+    if (priceTo) params.set("maxPrice", priceTo);
+    if (areaFrom) params.set("minArea", areaFrom);
+    if (areaTo) params.set("maxArea", areaTo);
+
+    // برو به URL جدید (بدون رفرش کامل)
+    router.push(`/buy-residential?${params.toString()}`);
+  };
+
+  // پاک کردن همه فیلترها
+  const clearFilters = () => {
+    setCategory("all");
+    setPriceFrom("");
+    setPriceTo("");
+    setAreaFrom("");
+    setAreaTo("");
+    router.push("/buy-residential");
+  };
+
+  // فیلتر کردن داده‌ها در کلاینت (موقت — بعداً از سرور می‌گیریم)
+  const filteredData = initialData.filter((item) => {
+    if (category !== "all" && item.category !== category) return false;
+    if (priceFrom && item.price < Number(priceFrom)) return false;
+    if (priceTo && item.price > Number(priceTo)) return false;
+    // اگر بعداً متراژ اضافه کردی، این خط رو فعال کن
+    // if (areaFrom && item.area < Number(areaFrom)) return false;
+    // if (areaTo && item.area > Number(areaTo)) return false;
+    return true;
+  });
+
+  const hasAds = filteredData.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8 px-4">
       <div className="container mx-auto max-w-7xl">
-        {/* <Image
-          src={data.Image}
-          alt="Descriptive text"
-          width={600}
-          height={400}
-        /> */}
-        {/* عنوان هوشمند و زیبا */}
-        <div className="text-center mb-14">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#304ffe] to-blue-600 inline-block leading-tight">
-            {pageTitle}
-          </h1>
-
-          <p className="mt-6 text-xl md:text-2xl text-gray-600 font-medium">
-            {hasAds ? (
-              <>
-                نمایش
-                <span className="text-2xl font-black text-[#304ffe] mx-2">
-                  {data.length.toLocaleString("fa-IR")}
-                </span>
-                آگهی فعال
-                {currentCategory !== "all" && currentCategory && (
-                  <>
-                    در دسته
-                    <span className="font-bold text-[#304ffe] text-2xl">
-                      {categoryPersian[currentCategory]}
-                    </span>
-                  </>
-                )}
-              </>
-            ) : (
-              <span className="text-gray-500">
-                در حال حاضر هیچ آگهی ثبت نشده است
-              </span>
-            )}
-          </p>
-        </div>
-
-        {/* محتوا: سایدبار + لیست آگهی‌ها */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-          {/* سایدبار — چسبنده و لوکس */}
-          <aside className="lg:col-span-1 order-2 lg:order-1">
-            <div className="sticky top-24 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#304ffe]/10 p-7">
-              <SideBar />
+        <AdvancedFilter />
+        {/* لیست آگهی‌ها */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {hasAds ? (
+            filteredData.map((profile) => (
+              <div
+                key={profile._id}
+                className="hover:-translate-y-2 transition-all duration-500"
+              >
+                <Card data={profile} />
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-24">
+              <div className="text-9xl opacity-10 mb-6">آگهی</div>
+              <h2 className="text-3xl font-extrabold text-gray-600">
+                هیچ آگهی یافت نشد
+              </h2>
+              <p className="text-gray-500 mt-4">
+                فیلترها را تغییر دهید یا همه را پاک کنید
+              </p>
             </div>
-          </aside>
-
-          {/* لیست آگهی‌ها */}
-          <main className="lg:col-span-3 order-1 lg:order-2">
-            {hasAds ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
-                {data.map((profile) => (
-                  <div
-                    key={profile._id}
-                    className="transform hover:-translate-y-3 transition-all duration-500"
-                  >
-                    <Card data={profile} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              /* پیام وقتی آگهی نیست — فوق‌العاده حرفه‌ای */
-              <div className="text-center py-32 bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-100">
-                <div className="text-9xl mb-8 opacity-10 font-bold text-[#304ffe]">
-                  آگهی
-                </div>
-                <h2 className="text-4xl font-extrabold text-gray-700 mb-6">
-                  هنوز هیچ آگهی ثبت نشده است
-                </h2>
-                <p className="text-lg text-gray-500 max-w-md mx-auto px-6 leading-relaxed">
-                  به زودی بهترین آگهی‌های خرید ملک در این دسته‌بندی اضافه خواهد
-                  شد.
-                </p>
-                <button
-                  onClick={() =>
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }
-                  className="mt-10 inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white rounded-full font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
-                >
-                  بازگشت به بالا
-                </button>
-              </div>
-            )}
-          </main>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-export default BuyResidentialPage;

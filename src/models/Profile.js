@@ -30,6 +30,10 @@ const profileSchema = new Schema(
       type: Number,
       required: true,
     },
+    size: {
+      type: Number,
+      required: true,
+    },
     constructionDate: {
       type: Date,
       required: true,
