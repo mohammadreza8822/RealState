@@ -35,6 +35,7 @@ export default function SearchPage() {
 
         if (res.ok) {
           setAds(data.ads || []);
+          console.log(data.ads);
         } else {
           alert("خطا در دریافت آگهی‌ها");
         }
@@ -91,14 +92,25 @@ export default function SearchPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {ads.map((ad) => (
-              <Link href={`/p/${ad._id}`} key={ad._id} className="block group">
+              <Link
+                href={`/buy-residential/${ad._id}`}
+                key={ad._id}
+                className="block group"
+              >
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
                   <div className="relative h-64 bg-gray-100">
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                      تصویر موجود نیست
-                    </div>
-                    {/* اگه بعداً فیلد images اضافه کردی، اینو فعال کن */}
-                    {/* {ad.images?.[0] && <Image src={ad.images[0]} fill alt={ad.title} className="object-cover" />} */}
+                    {ad.image ? (
+                      <Image
+                        src={ad.image}
+                        alt={ad.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-400">
+                        تصویر موجود نیست
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-6">

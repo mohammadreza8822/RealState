@@ -4,6 +4,7 @@ import Card from "@/module/Card";
 import SideBar from "@/module/SideBar";
 import { FiHome } from "react-icons/fi";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 // تبدیل کلید به فارسی برای نمایش
 const categoryPersian = {
@@ -27,6 +28,12 @@ function BuyResidentialPage({ data = [] }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-16 px-4">
       <div className="container mx-auto max-w-7xl">
+        {/* <Image
+          src={data.Image}
+          alt="Descriptive text"
+          width={600}
+          height={400}
+        /> */}
         {/* عنوان هوشمند و زیبا */}
         <div className="text-center mb-14">
           <h1 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#304ffe] to-blue-600 inline-block leading-tight">
@@ -70,7 +77,7 @@ function BuyResidentialPage({ data = [] }) {
           {/* لیست آگهی‌ها */}
           <main className="lg:col-span-3 order-1 lg:order-2">
             {hasAds ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-9">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
                 {data.map((profile) => (
                   <div
                     key={profile._id}

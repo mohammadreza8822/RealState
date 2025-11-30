@@ -7,10 +7,11 @@ import Title from "@/module/Title";
 import ShareButton from "@/module/ShareButton";
 import { icons } from "@/constants/icons";
 import FavoriteButton from "../module/FavoriteButton.js";
+import Image from "next/image";
 
 function DetailsPage({
   data: {
-    _id, // این رو اضافه کن
+    _id,
     title,
     description,
     location,
@@ -21,6 +22,7 @@ function DetailsPage({
     price,
     category,
     constructionDate,
+    image, // فیلد جدید برای عکس
   },
 }) {
   const categories = {
@@ -36,13 +38,56 @@ function DetailsPage({
     day: "numeric",
   });
 
+  // اگر image آرایه باشه، اولین عکس رو نشون بده
+  const mainImage = Array.isArray(image) ? image[0] : image;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4">
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* بخش اصلی آگهی */}
           <div className="lg:col-span-2 space-y-10">
-            {/* عنوان + قلب ذخیره — اینجا اضافه شد */}
+            {/* عکس آگهی - لوکس و تمام‌صفحه */}
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="relative h-[400px] md:h-[500px] group">
+                {mainImage ? (
+                  <Image
+                    src={mainImage}
+                    alt={title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    unoptimized // برای لوکال و مسیرهای /uploads
+                    priority={true} // لود سریع‌تر برای عکس اصلی
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                    <div className="w-24 h-24 bg-white/30 rounded-3xl flex items-center justify-center mb-4 shadow-xl">
+                      {icons[category] || icons.apartment}
+                    </div>
+                    <span className="text-gray-500 font-medium text-lg">
+                      بدون تصویر
+                    </span>
+                  </div>
+                )}
+
+                {/* گرادیانت پایین عکس برای خوانایی */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
+
+                {/* برچسب دسته‌بندی روی عکس */}
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                  {categories[category]}
+                </div>
+
+                {/* تعداد عکس‌ها (اگر آرایه بود) */}
+                {Array.isArray(image) && image.length > 1 && (
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-bold text-[#304ffe] shadow-lg">
+                    {image.length} عکس
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* عنوان + قلب ذخیره */}
             <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 relative overflow-hidden">
               <div className="flex items-start justify-between gap-6">
                 <div className="flex-1">
@@ -55,7 +100,6 @@ function DetailsPage({
                   </div>
                 </div>
 
-                {/* قلب بزرگ و زیبا — مخصوص صفحه جزئیات */}
                 <div className="flex-shrink-0">
                   <FavoriteButton adId={_id} size="large" />
                 </div>

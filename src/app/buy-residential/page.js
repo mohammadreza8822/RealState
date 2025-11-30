@@ -7,7 +7,7 @@ export default async function BuyResidential({ searchParams }) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/profile`,
       {
-        cache: "no-store", // همیشه تازه باشه
+        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
         },
