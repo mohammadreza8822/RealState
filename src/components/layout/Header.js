@@ -121,14 +121,11 @@ function Header() {
                 </Link>
               )}
 
-              {/* همبرگری موبایل */}
+              {/* همبرگری موبایل — */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`lg:hidden p-3 rounded-xl transition-all ${
-                  isScrolled
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-white/20 text-white"
-                }`}
+                className="lg:hidden p-4 rounded-2xl bg-white/30 backdrop-blur-xl border border-white/50 text-gray-900 shadow-xl hover:bg-white/50 transition-all duration-300"
+                style={{ minWidth: "56px", minHeight: "56px" }} // برای تاچ بهتر تو موبایل
               >
                 {isMobileMenuOpen ? (
                   <FiX className="text-2xl" />
