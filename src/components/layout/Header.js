@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 function Header() {
   const { data, status } = useSession();
   const isSuperAdmin = data?.user?.role === "SUPERADMIN";
+  const isAdmin = data?.user?.role === "ADMIN" || isSuperAdmin;
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [favoritesCount, setFavoritesCount] = useState(0);
@@ -38,6 +39,9 @@ function Header() {
     { href: "/buy-residential", label: "آگهی‌ها" },
     ...(isSuperAdmin
       ? [{ href: "/user-access", label: "دسترسی کاربران" }]
+      : []),
+    ...(isAdmin
+      ? [{ href: "/contact-us-answers", label: "پیام‌های تماس" }]
       : []),
     { href: "/about", label: "درباره ما" },
     { href: "/contact", label: "تماس با ما" },
