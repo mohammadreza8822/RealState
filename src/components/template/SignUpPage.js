@@ -26,7 +26,7 @@ function SignUpPage() {
     setLoading(true);
 
     // اگر تیک "مشاور" زده شده بود → در واقع ادمین است!
-    const role = isConsultant ? "admin" : "user";
+    const role = isConsultant ? "ADMIN" : "USER";
 
     const res = await fetch("/api/auth/signup", {
       method: "POST",

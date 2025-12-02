@@ -29,14 +29,12 @@ export async function POST(req) {
     // هش کردن پسورد
     const hashedPassword = await hashPassword(password);
 
-    // تعیین نقش: اگر role اومد و "admin" بود → ادمین، وگرنه کاربر عادی
-    const userRole = role ? "ADMIN" : "USER";
-
     // ایجاد کاربر جدید با نقش
+
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      role: userRole, // ذخیره نقش در دیتابیس
+      role,
     });
 
     console.log("کاربر جدید ایجاد شد:", newUser);
