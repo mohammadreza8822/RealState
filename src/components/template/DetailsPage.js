@@ -252,6 +252,7 @@ export default function DetailsPage({
           listingId={_id}
           listingTitle={title}
           location={location}
+          visitAvailability={visitAvailability}
         />
       )}
     </>
