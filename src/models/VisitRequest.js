@@ -29,10 +29,11 @@ const VisitRequestSchema = new mongoose.Schema(
     message: { type: String, default: "" },
 
     // وضعیت و مدیریت
+
     status: {
       type: String,
-      enum: ["جدید", "در حال بررسی", "تأیید شده", "انجام شد", "لغو شد"],
-      default: "جدید",
+      enum: ["pending", "confirmed", "rejected", "completed", "canceled"],
+      default: "pending",
     },
     notified: { type: Boolean, default: false }, // برای پیامک یا ایمیل به مشاور
     adminSeen: { type: Boolean, default: false }, // برای علامت "خوانده نشده" در داشبورد
