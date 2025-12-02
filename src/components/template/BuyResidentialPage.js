@@ -3,22 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Card from "@/module/Card";
-import { HiFilter, HiX } from "react-icons/hi";
 import AdvancedFilter from "@/module/AdvancedFilter";
-
-const categoryPersian = {
-  villa: "ویلا",
-  apartment: "آپارتمان",
-  store: "مغازه",
-  office: "دفتر",
-};
 
 export default function BuyResidentialPage({ data: initialData = [] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // حالت باز/بسته بودن فیلتر در موبایل
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // خواندن مقادیر فیلتر از URL
   const currentCategory = searchParams.get("category") || "all";
@@ -55,16 +44,6 @@ export default function BuyResidentialPage({ data: initialData = [] }) {
 
     // برو به URL جدید (بدون رفرش کامل)
     router.push(`/buy-residential?${params.toString()}`);
-  };
-
-  // پاک کردن همه فیلترها
-  const clearFilters = () => {
-    setCategory("all");
-    setPriceFrom("");
-    setPriceTo("");
-    setAreaFrom("");
-    setAreaTo("");
-    router.push("/buy-residential");
   };
 
   // فیلتر کردن داده‌ها در کلاینت (موقت — بعداً از سرور می‌گیریم)

@@ -216,6 +216,12 @@ function AddProfilePage({ data }) {
         setProfileData={setProfileData}
       />
       <TextInput
+        title="ادرس"
+        name="address"
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
+      <TextInput
         title="بنگاه"
         name="realState"
         profileData={profileData}
