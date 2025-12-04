@@ -14,7 +14,19 @@ async function DashboardSidebar({ children, role, email }) {
         <Link href={"/dashboard"}>حساب کاربری</Link>
         <Link href={"/dashboard/my-profiles"}>آگهی های من</Link>
         <Link href={"/dashboard/add"}>ثبت آگهی</Link>
-        {role === "ADMIN" ? <Link href={"/admin"}>در انتظار تایید</Link> : null}
+        {role === "SUPERADMIN" ? (
+          <Link href={"/dashboard/superadmin/agent-requests"}>
+            مدیریت ادمین‌ها
+          </Link>
+        ) : null}
+
+        {role === "ADMIN" || role === "SUPERADMIN" ? (
+          <>
+            <Link href={"/admin"}>در انتظار تایید</Link>
+            <Link href={"/contact-us-answers"}>پیام‌های تماس</Link>
+            <Link href={"/admin/visit-requests"}>درخواست‌های بازدید</Link>
+          </>
+        ) : null}
         <div className="size-14">
           <LogOutButton />
         </div>

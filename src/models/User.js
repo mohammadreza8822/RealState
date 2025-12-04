@@ -8,6 +8,12 @@ const userSchema = new Schema({
     enum: ["SUPERADMIN", "ADMIN", "USER"],
     default: "USER",
   },
+  agentStatus: {
+    type: String,
+    enum: ["none", "pending", "approved", "rejected"],
+    default: "none",
+  },
+  agentRequestedAt: { type: Date },
   favorites: {
     type: [Schema.Types.ObjectId],
     ref: "Profile",

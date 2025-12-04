@@ -7,49 +7,59 @@ export async function POST(req) {
   try {
     await connectDB();
 
-    const { email, password, role } = await req.json();
+    const { email, password, requestAgent } = await req.json();
 
-    // اعتبارسنجی ورودی‌ها
+    // اعتبارسنجی
     if (!email || !password) {
       return NextResponse.json(
-        { error: "لطفا اطلاعات معتبر وارد کنید." },
+        { error: "ایمیل و رمز عبور الزامی است" },
         { status: 422 }
       );
     }
 
-    // بررسی وجود کاربر
+    // بررسی تکراری بودن ایمیل
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { error: "این حساب کاربری قبلاً ثبت شده است." },
+        { error: "این ایمیل قبلاً ثبت شده است" },
         { status: 422 }
       );
     }
 
-    // هش کردن پسورد
+    // هش رمز
     const hashedPassword = await hashPassword(password);
 
-    // ایجاد کاربر جدید با نقش
-
+    // ایجاد کاربر — همیشه با نقش USER
     const newUser = await User.create({
       email,
       password: hashedPassword,
-      role,
+      role: "USER",
+      agentStatus: requestAgent ? "pending" : "none",
+      agentRequestedAt: requestAgent ? new Date() : null,
     });
 
-    console.log("کاربر جدید ایجاد شد:", newUser);
+    console.log("کاربر جدید ثبت شد:", {
+      email: newUser.email,
+      role: newUser.role,
+      agentStatus: newUser.agentStatus,
+    });
+
+    // پیام متفاوت برای مشاور و کاربر عادی
+    const message = requestAgent
+      ? "ثبت‌نام انجام شد! درخواست شما برای مشاور شدن در انتظار تأیید مدیر است"
+      : "حساب کاربری با موفقیت ایجاد شد!";
 
     return NextResponse.json(
       {
-        message: "حساب کاربری با موفقیت ایجاد شد!",
-        data: { email: newUser.email, role: newUser.role },
+        message,
+        data: { email: newUser.email, role: "USER" },
       },
       { status: 201 }
     );
   } catch (err) {
     console.error("خطا در ثبت‌نام:", err);
     return NextResponse.json(
-      { error: "مشکلی در سرور رخ داده است. دوباره تلاش کنید." },
+      { error: "خطای سرور. دوباره تلاش کنید" },
       { status: 500 }
     );
   }

@@ -23,14 +23,21 @@ function SignUpPage() {
       return;
     }
 
+    if (password.length < 6) {
+      toast.error("رمز عبور باید حداقل ۶ کاراکتر باشد");
+      return;
+    }
+
     setLoading(true);
 
-    // اگر تیک "مشاور" زده شده بود → در واقع ادمین است!
-    const role = isConsultant ? "ADMIN" : "USER";
-
+    // تغییر مهم: دیگه role رو نمی‌فرستیم! فقط می‌گیم درخواست مشاور داره یا نه
     const res = await fetch("/api/auth/signup", {
       method: "POST",
-      body: JSON.stringify({ email, password, role }), // نقش ارسال میشه
+      body: JSON.stringify({
+        email,
+        password,
+        requestAgent: isConsultant,
+      }),
       headers: { "Content-Type": "application/json" },
     });
 
@@ -38,7 +45,11 @@ function SignUpPage() {
     setLoading(false);
 
     if (res.status === 201) {
-      toast.success("ثبت‌نام با موفقیت انجام شد!");
+      toast.success(
+        isConsultant
+          ? "ثبت‌نام شد! درخواست مشاور شدن شما در انتظار تأیید مدیر است"
+          : "ثبت‌نام با موفقیت انجام شد! حالا وارد شوید"
+      );
       router.push("/signin");
     } else {
       toast.error(data.error || "خطایی رخ داد");
@@ -46,45 +57,58 @@ function SignUpPage() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-[90vh]">
+    <div className="flex flex-col justify-center items-center h-[90vh] my-20">
       <h4 className="text-[#304ffe] font-semibold text-2xl mb-5">
         فرم ثبت نام
       </h4>
+
       <form className="flex flex-col max-w-[700px] shadow-[0px_4px_15px_#304ffe4a] border-2 border-[#304ffe] p-10 rounded-lg mb-8">
         <label className="text-[#304ffe] mb-2.5 font-normal">ایمیل:</label>
         <input
-          type="text"
+          type="email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mb-10 w-[250px] border border-[#304ffe] border-dashed text-gray-500 rounded-md p-2.5 ltr h-10 text-base focus:border-solid focus:outline-none"
+          className="mb-10 w-[350px] border border-[#304ffe] border-dashed text-gray-700 rounded-md p-2.5 ltr h-12 text-base focus:border-solid focus:outline-none"
         />
+
         <label className="text-[#304ffe] mb-2.5 font-normal">رمز عبور:</label>
         <input
           type="password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mb-10 w-[250px] border border-[#304ffe] border-dashed text-gray-500 rounded-md p-2.5 ltr h-10 text-base focus:border-solid focus:outline-none"
+          className="mb-10 w-[350px] border border-[#304ffe] border-dashed text-gray-700 rounded-md p-2.5 ltr h-12 text-base focus:border-solid focus:outline-none"
         />
+
         <label className="text-[#304ffe] mb-2.5 font-normal">
           تکرار رمز عبور:
         </label>
         <input
           type="password"
+          required
           value={rePassword}
           onChange={(e) => setRePassword(e.target.value)}
-          className="mb-5 w-[250px] border border-[#304ffe] border-dashed text-gray-500 rounded-md p-2.5 ltr h-10 text-base focus:border-solid focus:outline-none"
+          className="mb-8 w-[350px] border border-[#304ffe] border-dashed text-gray-700 rounded-md p-2.5 ltr h-12 text-base focus:border-solid focus:outline-none"
         />
-        <div className="flex w-full items-center mb-10">
-          <label className="text-[#304ffe] font-normal">
-            میخواهید مشاور شوید ؟
-          </label>
+
+        {/* تیک مشاور — حالا فقط درخواست می‌فرسته */}
+        <div className="flex items-center gap-3 mb-10 bg-amber-50 p-4 rounded-xl border border-amber-300">
           <input
             type="checkbox"
-            value={isConsultant}
+            id="consultant"
+            checked={isConsultant}
             onChange={(e) => setIsConsultant(e.target.checked)}
-            className="mr-2"
+            className="w-6 h-6 text-amber-600 rounded cursor-pointer"
           />
+          <label
+            htmlFor="consultant"
+            className="text-amber-800 font-bold cursor-pointer select-none"
+          >
+            می‌خواهم به عنوان مشاور املاک فعالیت کنم
+          </label>
         </div>
+
         {loading ? (
           <div className="flex justify-center">
             <Loader />
@@ -93,22 +117,24 @@ function SignUpPage() {
           <button
             type="submit"
             onClick={signUpHandler}
-            className="border-none bg-[#304ffe] text-white text-lg font-normal rounded-md transition-all duration-100 cursor-pointer py-2 hover:scale-105"
+            className="border-none bg-[#304ffe] text-white text-lg font-bold rounded-md py-4 hover:scale-105 transition-all shadow-lg"
           >
-            ثبت نام
+            {isConsultant ? "ارسال درخواست مشاور" : "ثبت نام"}
           </button>
         )}
       </form>
-      <p className="text-gray-500 text-lg">
+
+      <p className="text-gray-500 text-lg mb-20">
         حساب کاربری دارید؟{" "}
         <Link
           href="/signin"
-          className="text-[#304ffe] mr-2.5 border-b-[3px] border-gray-500"
+          className="text-[#304ffe] font-bold border-b-2 border-[#304ffe] pb-1"
         >
           ورود
         </Link>
       </p>
-      <Toaster />
+
+      <Toaster position="top-center" />
     </div>
   );
 }

@@ -40,12 +40,6 @@ function Header() {
     ...(isSuperAdmin
       ? [{ href: "/user-access", label: "دسترسی کاربران" }]
       : []),
-    ...(isAdmin
-      ? [
-          { href: "/contact-us-answers", label: "پیام‌های تماس" },
-          { href: "/admin/visit-requests", label: "درخواست‌های بازدید" },
-        ]
-      : []),
     { href: "/about", label: "درباره ما" },
     { href: "/contact", label: "تماس با ما" },
   ];

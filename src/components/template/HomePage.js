@@ -50,7 +50,7 @@ export default function HomePage() {
     }
 
     fetchData();
-  }, []); // ❗ مهم — فقط یک بار اجرا شود
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -213,16 +213,13 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {/* اینجا ۸ تا کارت فایل جدید و جذاب بذار (من فقط اسکلت می‌دم) */}
-              {residential.map((item) => (
+              {residential.slice(0, 8).map((item) => (
                 <Link href={`/buy-residential/${item._id}`} key={item._id}>
                   <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-3 transition-all group">
                     <div className="relative">
                       <div className="bg-gray-200 border-2 border-dashed rounded-t-2xl w-full h-48" />
                       <span className="absolute top-4 left-4 bg-red-600 text-white px-4 py-1 rounded-full text-sm font-bold">
                         جدید
-                      </span>
-                      <span className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                        <FiTrendingUp /> +۱۸٪
                       </span>
                     </div>
                     <div className="p-5">
