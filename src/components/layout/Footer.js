@@ -88,11 +88,11 @@ export default function Footer() {
             </div>
 
             {/* بخش توسعه‌دهنده — غرورآفرین و حرفه‌ای */}
-            <div className="bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-md">
-              <p className="text-gray-700 text-sm font-medium whitespace-nowrap">
+            {/* <div className="bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-md"> */}
+            {/* <p className="text-gray-700 text-sm font-medium whitespace-nowrap">
                 طراحی و توسعه توسط
-              </p>
-              <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
+              </p> */}
+            {/* <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
                 <span className="font-bold text-[#304ffe]">
                   {developerName}
                 </span>
@@ -117,8 +117,8 @@ export default function Footer() {
               </div>
               <p className="text-xs text-gray-500 mt-2 flex items-center gap-1 justify-center md:justify-start">
                 ساخته شده با <FiHeart className="text-red-500" /> در ایران
-              </p>
-            </div>
+              </p> */}
+            {/* </div> */}
           </div>
         </div>
       </div>
