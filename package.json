@@ -11,7 +11,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "mongoose": "^8.14.2",
-    "next": "15.3.2",
+    "next": "15.3.8",
     "next-auth": "^4.24.11",
     "persian-date": "^1.1.0",
     "persian-datepicker": "^1.2.0",
