@@ -7,6 +7,8 @@ import connectDB from "@/utils/connectDB";
 import AdminPage from "@/template/AdminPage";
 import DashboardSidebar from "@/layout/DashboardSidebar";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "املاک | پنل کاربری",
 };

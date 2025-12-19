@@ -1,9 +1,11 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/api/auth/[...nextauth]/route";
 import DashboardSidebar from "@/layout/DashboardSidebar";
 import connectDB from "@/utils/connectDB";
 import User from "@/models/User";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: "املاک | پنل کاربری",

@@ -1,11 +1,13 @@
 // src/app/admin/visit-requests/page.jsx
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/api/auth/[...nextauth]/route";
 import connectDB from "@/utils/connectDB";
 import VisitRequest from "@/models/VisitRequest";
 import Profile from "@/models/Profile";
 import AdminVisitRequestsTable from "@/module/AdminVisitRequestsTable";
 import { getTranslations } from "next-intl/server";
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
   const t = await getTranslations();

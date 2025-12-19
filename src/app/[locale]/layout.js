@@ -11,6 +11,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Exclude dynamic routes from static generation
+export const dynamicParams = true;
+
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   const messages = await getMessages({ locale });
