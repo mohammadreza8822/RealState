@@ -1,5 +1,7 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BuyResidential({ searchParams }) {
   const category = searchParams?.category || null;
 
@@ -55,12 +57,12 @@ export default async function BuyResidential({ searchParams }) {
           <p className="text-lg text-gray-600 mb-8">
             لطفاً صفحه را رفرش کنید یا بعداً مراجعه کنید.
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-8 py-4 bg-[#304ffe] text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg"
+          <a
+            href="/buy-residential"
+            className="inline-block px-8 py-4 bg-[#304ffe] text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg"
           >
             تلاش مجدد
-          </button>
+          </a>
         </div>
       </div>
     );

@@ -1,6 +1,8 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
 import { getTranslations } from "next-intl/server";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BuyResidential({ searchParams }) {
   const t = await getTranslations();
   const category = searchParams?.category || null;
@@ -58,8 +60,7 @@ export default async function BuyResidential({ searchParams }) {
             {t("buyResidential.refreshPage")}
           </p>
           <a
-            href="#"
-            onClick={(e) => { e.preventDefault(); window.location.reload(); }}
+            href="/buy-residential"
             className="inline-block px-8 py-4 bg-[#304ffe] text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg"
           >
             {t("buyResidential.retry")}
