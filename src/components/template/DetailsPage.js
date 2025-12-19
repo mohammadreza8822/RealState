@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 import { BiCalendarCheck } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -38,19 +39,22 @@ export default function DetailsPage({
   },
 }) {
   const { data: session, status } = useSession();
+  const t = useTranslations();
+  const locale = useLocale();
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
 
   const isUser = status === "authenticated" && session?.user?.role === "USER";
   const isAdmin = status === "authenticated" && session?.user?.role === "ADMIN";
 
   const categories = {
-    apartment: "آپارتمان مسکونی",
-    villa: "ویلا",
-    store: "مغازه و تجاری",
-    office: "دفتر اداری",
+    apartment: t("detailsPage.categories.apartment"),
+    villa: t("detailsPage.categories.villa"),
+    store: t("detailsPage.categories.store"),
+    office: t("detailsPage.categories.office"),
   };
 
-  const persianDate = new Date(constructionDate).toLocaleDateString("fa-IR", {
+  const dateLocale = locale === 'fa' ? 'fa-IR' : locale === 'ar' ? 'ar-SA' : 'en-US';
+  const formattedDate = new Date(constructionDate).toLocaleDateString(dateLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -83,7 +87,7 @@ export default function DetailsPage({
                         {icons[category] || icons.apartment}
                       </div>
                       <span className="text-gray-500 font-medium text-lg">
-                        بدون تصویر
+                        {t("detailsPage.noImage")}
                       </span>
                     </div>
                   )}
@@ -92,8 +96,8 @@ export default function DetailsPage({
                     {categories[category]}
                   </div>
                   {Array.isArray(image) && image.length > 1 && (
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-bold text-[#304ffe] shadow-lg">
-                      {image.length} عکس
+                    <div className={`absolute top-4 ${locale === 'fa' || locale === 'ar' ? 'right-4' : 'left-4'} bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-bold text-[#304ffe] shadow-lg`}>
+                      {image.length} {t("detailsPage.photos")}
                     </div>
                   )}
                 </div>
@@ -117,7 +121,7 @@ export default function DetailsPage({
 
               {/* توضیحات */}
               <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <Title title="توضیحات کامل آگهی" />
+                <Title title={t("detailsPage.fullDescription")} />
                 <p className="text-gray-700 leading-8 text-justify whitespace-pre-line">
                   {description}
                 </p>
@@ -126,7 +130,7 @@ export default function DetailsPage({
               {/* امکانات */}
               {amenities?.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                  <Title title="امکانات رفاهی" />
+                  <Title title={t("detailsPage.amenities")} />
                   <ItemList data={amenities} />
                 </div>
               )}
@@ -134,7 +138,7 @@ export default function DetailsPage({
               {/* قوانین */}
               {rules?.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                  <Title title="قوانین" />
+                  <Title title={t("detailsPage.rules")} />
                   <ItemList data={rules} />
                 </div>
               )}
@@ -150,7 +154,7 @@ export default function DetailsPage({
                       <SiHomebridge className="text-3xl" />
                     </div>
                     <div>
-                      <p className="text-sm opacity-90">املاک</p>
+                      <p className="text-sm opacity-90">{t("detailsPage.realEstate")}</p>
                       <p className="text-xl font-bold">{realState}</p>
                     </div>
                   </div>
@@ -161,32 +165,32 @@ export default function DetailsPage({
                     href={`tel:${phone}`}
                     className="flex items-center justify-center gap-3 w-full bg-[#304ffe] text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
                   >
-                    تماس با مشاور
+                    {t("detailsPage.contactConsultant")}
                   </a>
 
                   <div className="text-center">
                     <p className="text-3xl font-black text-[#304ffe]">
-                      {sp(price)} تومان
+                      {sp(price)} {locale === 'fa' ? 'تومان' : locale === 'ar' ? 'ريال' : 'Toman'}
                     </p>
                   </div>
 
                   <div className="space-y-4 pt-4 border-t border-gray-200">
-                    <div className="flex items-center gap-4 text-gray-700">
+                    <div className={`flex items-center gap-4 text-gray-700 ${locale === 'fa' || locale === 'ar' ? '' : 'flex-row-reverse'}`}>
                       <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-[#304ffe]">
                         {icons[category]}
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">دسته‌بندی</p>
+                        <p className="text-sm text-gray-500">{t("detailsPage.category")}</p>
                         <p className="font-bold">{categories[category]}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 text-gray-700">
+                    <div className={`flex items-center gap-4 text-gray-700 ${locale === 'fa' || locale === 'ar' ? '' : 'flex-row-reverse'}`}>
                       <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
                         <BiCalendarCheck className="text-2xl" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">تاریخ ساخت</p>
-                        <p className="font-bold">{persianDate}</p>
+                        <p className="text-sm text-gray-500">{t("detailsPage.constructionDate")}</p>
+                        <p className="font-bold">{formattedDate}</p>
                       </div>
                     </div>
                   </div>
@@ -210,32 +214,32 @@ export default function DetailsPage({
                 /* کاربر عادی: درخواست بازدید */
                 <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-3xl shadow-2xl p-8 text-white text-center">
                   <h3 className="text-2xl font-bold mb-5 leading-relaxed">
-                    می‌خواهید این ملک را از نزدیک ببینید؟
+                    {t("detailsPage.wantToSee")}
                   </h3>
                   <button
                     onClick={() => setIsVisitModalOpen(true)}
                     className="w-full bg-white text-emerald-600 px-8 py-5 rounded-2xl font-bold text-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-4"
                   >
                     <BiCalendarCheck className="text-3xl" />
-                    درخواست بازدید حضوری (رایگان)
+                    {t("detailsPage.requestVisitFree")}
                   </button>
                   <p className="text-sm mt-4 opacity-90">
-                    مشاور ظرف ۲۴ ساعت با شما تماس می‌گیرد
+                    {t("detailsPage.consultantWillCall")}
                   </p>
                 </div>
               ) : (
                 /* مهمان: دعوت به ورود */
                 <div className="bg-gradient-to-r from-amber-500 to-orange-600 rounded-3xl shadow-2xl p-8 text-white text-center">
                   <h3 className="text-2xl font-bold mb-4">
-                    برای درخواست بازدید وارد شوید
+                    {t("detailsPage.loginToRequest")}
                   </h3>
                   <Link href="/signin">
                     <button className="w-full bg-white text-amber-600 px-8 py-5 rounded-2xl font-bold text-xl shadow-xl hover:scale-105 transition">
-                      ورود / ثبت‌نام
+                      {t("common.login")} / {t("common.signup")}
                     </button>
                   </Link>
                   <p className="text-sm mt-4 opacity-90">
-                    بعد از ورود می‌توانید بازدید حضوری هماهنگ کنید
+                    {t("detailsPage.afterLogin")}
                   </p>
                 </div>
               )}

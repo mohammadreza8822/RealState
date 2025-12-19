@@ -1,15 +1,23 @@
-// layout/Footer.jsx یا components/Footer.jsx
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
 import { FiGithub, FiLinkedin, FiHeart } from "react-icons/fi";
 
 export default function Footer() {
+  const t = useTranslations();
+  const locale = useLocale();
   const currentYear = new Date().getFullYear();
+  const isRTL = locale === 'fa' || locale === 'ar';
 
   // اسمت رو اینجا عوض کن
   const developerName = "محمدرضا اصغری";
   const linkedinUrl =
     "https://www.linkedin.com/in/mohammadreza-asghary-3b6a54322/";
   const githubUrl = "https://github.com/mohammadreza8822";
+  
+  const textAlign = isRTL ? 'md:text-right' : 'md:text-left';
+  const itemsAlign = isRTL ? 'md:items-end' : 'md:items-start';
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
@@ -17,74 +25,74 @@ export default function Footer() {
       <div className="h-1 bg-gradient-to-r from-[#304ffe] via-blue-500 to-cyan-500" />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-right">
+        <div className={`grid grid-cols-1 md:grid-cols-4 gap-8 text-center ${textAlign}`}>
           {/* ستون ۱: لوگو و توضیح */}
-          <div className="flex flex-col items-center md:items-end">
+          <div className={`flex flex-col items-center ${itemsAlign}`}>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 bg-gradient-to-br from-[#304ffe] to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <div className="w-7 h-7 bg-white rounded-lg"></div>
               </div>
               <span className="text-2xl font-bold text-[#304ffe]">
-                سامانه املاک
+                {t("footer.siteName")}
               </span>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed max-w-xs">
-              پلتفرم هوشمند خرید، فروش و اجاره ملک با بهترین مشاوران ایران
+              {t("footer.description")}
             </p>
           </div>
 
           {/* ستون ۲ و ۳: لینک‌های سریع (دو ستونه در موبایل) */}
           <div className="col-span-1 md:col-span-2">
             <h4 className="font-bold text-gray-800 mb-6 text-lg">
-              لینک‌های سریع
+              {t("footer.quickLinks")}
             </h4>
             <div className="grid grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
               <Link
                 href="/"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                صفحه اصلی
+                {t("footer.home")}
               </Link>
               <Link
                 href="/buy-residential"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                آگهی‌های خرید
+                {t("footer.buyAds")}
               </Link>
               <Link
                 href="/about"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                درباره ما
+                {t("footer.about")}
               </Link>
               <Link
                 href="/contact"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                تماس با ما
+                {t("footer.contact")}
               </Link>
               <Link
                 href="/privacy"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                حریم خصوصی
+                {t("footer.privacy")}
               </Link>
               <Link
                 href="/terms"
                 className="text-gray-600 hover:text-[#304ffe] transition-colors"
               >
-                قوانین سایت
+                {t("footer.terms")}
               </Link>
             </div>
           </div>
 
           {/* ستون ۴: کپی‌رایت + توسعه‌دهنده */}
-          <div className="flex flex-col items-center md:items-start space-y-6">
-            <div className="text-center md:text-right">
+          <div className={`flex flex-col items-center ${itemsAlign} space-y-6`}>
+            <div className={`text-center ${textAlign}`}>
               <p className="text-gray-500 text-sm">
-                © {currentYear} سامانه املاک
+                © {currentYear} {t("footer.siteName")}
               </p>
-              <p className="text-gray-500 text-xs mt-1">تمامی حقوق محفوظ است</p>
+              <p className="text-gray-500 text-xs mt-1">{t("footer.copyright")}</p>
             </div>
 
             {/* بخش توسعه‌دهنده — غرورآفرین و حرفه‌ای */}

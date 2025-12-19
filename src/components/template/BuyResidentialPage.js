@@ -1,11 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Card from "@/module/Card";
 import AdvancedFilter from "@/module/AdvancedFilter";
 
 export default function BuyResidentialPage({ data: initialData = [] }) {
+  const t = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -76,12 +79,12 @@ export default function BuyResidentialPage({ data: initialData = [] }) {
             ))
           ) : (
             <div className="col-span-full text-center py-24">
-              <div className="text-9xl opacity-10 mb-6">آگهی</div>
+              <div className="text-9xl opacity-10 mb-6">{t("buyResidentialPage.ad")}</div>
               <h2 className="text-3xl font-extrabold text-gray-600">
-                هیچ آگهی یافت نشد
+                {t("buyResidentialPage.noAdsFound")}
               </h2>
               <p className="text-gray-500 mt-4">
-                فیلترها را تغییر دهید یا همه را پاک کنید
+                {t("buyResidentialPage.changeFilters")}
               </p>
             </div>
           )}

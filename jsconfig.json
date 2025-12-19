@@ -11,7 +11,8 @@
       "@/template/*": ["src/components/template/*"],
       "@/provides/*": ["src/providers/*"],
       "@/api/*": ["src/app/api/*"],
-      "@/constants/*": ["src/constants/*"]
+      "@/constants/*": ["src/constants/*"],
+      "@/i18n/*": ["src/i18n/*"]
     }
   }
 }

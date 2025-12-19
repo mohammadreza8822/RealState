@@ -1,22 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, use } from "react";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
+import { useState, useEffect } from "react";
 import { FaFire, FaChartLine, FaCalculator, FaStar } from "react-icons/fa";
 import { FiCheckCircle, FiTrendingUp, FiMapPin, FiClock } from "react-icons/fi";
 import heroBg from "@/public/images/home-bg.jpg";
 import joinUs from "@/public/images/join-us.jpg";
-import { services } from "@/constants/strings";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 export default function HomePage() {
   const router = useRouter();
+  const t = useTranslations();
+  const locale = useLocale();
+  const isRTL = locale === 'fa' || locale === 'ar';
 
   // استیت‌های سرچ
   const [query, setQuery] = useState("");
-  const [transaction, setTransaction] = useState("خرید");
-  const [propertyType, setPropertyType] = useState("همه املاک");
+  const buyText = t("common.buy");
+  const allPropertiesText = t("common.allProperties");
+  const [transaction, setTransaction] = useState(buyText);
+  const [propertyType, setPropertyType] = useState(allPropertiesText);
   const [residential, setResidential] = useState([]);
 
   // شمارنده زنده (انیمیشن)
@@ -56,11 +61,18 @@ export default function HomePage() {
     e.preventDefault();
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
-    if (transaction !== "خرید") params.set("transaction", transaction);
-    if (propertyType !== "همه املاک") params.set("type", propertyType);
+    if (transaction !== buyText) params.set("transaction", transaction);
+    if (propertyType !== allPropertiesText) params.set("type", propertyType);
     const url = params.toString() ? `/search?${params.toString()}` : "/search";
     router.push(url);
   };
+
+  const services = [
+    t("services.buy"),
+    t("services.sell"),
+    t("services.mortgage"),
+    t("services.rent")
+  ];
 
   return (
     <>
@@ -84,31 +96,31 @@ export default function HomePage() {
               <div className="flex justify-center gap-8 md:gap-16 mb-8 text-white/90">
                 <div className="text-center">
                   <p className="text-3xl md:text-5xl font-black">
-                    {stats.listings.toLocaleString("fa-IR")}+
+                    {stats.listings.toLocaleString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US')}+
                   </p>
-                  <p className="text-sm md:text-lg mt-1">آگهی فعال</p>
+                  <p className="text-sm md:text-lg mt-1">{t("home.activeListings")}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-3xl md:text-5xl font-black text-orange-400">
                     +{stats.today}
                   </p>
                   <p className="text-sm md:text-lg mt-1 flex items-center gap-2 justify-center">
-                    <FiClock /> امروز
+                    <FiClock /> {t("home.todayAdded")}
                   </p>
                 </div>
                 <div className="text-center">
                   <p className="text-3xl md:text-5xl font-black text-green-400">
-                    {stats.sold.toLocaleString("fa-IR")}
+                    {stats.sold.toLocaleString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US')}
                   </p>
-                  <p className="text-sm md:text-lg mt-1">معامله موفق</p>
+                  <p className="text-sm md:text-lg mt-1">{t("home.successfulDeals")}</p>
                 </div>
               </div>
 
               <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-2xl">
-                ملک رویاهات اینجاست!
+                {t("home.title")}
               </h1>
               <p className="text-xl md:text-3xl text-cyan-200 font-bold max-w-5xl mx-auto drop-shadow-2xl mb-10">
-                بدون واسطه · قیمت واقعی · مشاوره رایگان ۲۴ ساعته
+                {t("home.subtitle")}
               </p>
 
               {/* سرچ‌بار ارتقا یافته */}
@@ -121,12 +133,12 @@ export default function HomePage() {
                     <div className="flex-1 relative">
                       <input
                         type="text"
-                        placeholder="محله، خیابان، اسم پروژه یا شهر..."
+                        placeholder={t("common.searchPlaceholder")}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        className="w-full px-14 py-5 text-lg text-gray-800 bg-transparent outline-none"
+                        className={`w-full ${isRTL ? 'px-14' : 'px-5 pr-14'} py-5 text-lg text-gray-800 bg-transparent outline-none`}
                       />
-                      <FiMapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-blue-600" />
+                      <FiMapPin className={`absolute ${isRTL ? 'left-5' : 'right-5'} top-1/2 -translate-y-1/2 text-2xl text-blue-600`} />
                     </div>
 
                     <select
@@ -134,10 +146,10 @@ export default function HomePage() {
                       onChange={(e) => setTransaction(e.target.value)}
                       className="px-6 py-5 rounded-2xl bg-gray-50 font-bold text-gray-700"
                     >
-                      <option>خرید</option>
-                      <option>اجاره</option>
-                      <option>رهن و اجاره</option>
-                      <option>رهن کامل</option>
+                      <option>{t("common.buy")}</option>
+                      <option>{t("common.rent")}</option>
+                      <option>{t("common.mortgageAndRent")}</option>
+                      <option>{t("common.fullMortgage")}</option>
                     </select>
 
                     <select
@@ -145,11 +157,11 @@ export default function HomePage() {
                       onChange={(e) => setPropertyType(e.target.value)}
                       className="px-6 py-5 rounded-2xl bg-gray-50 font-bold text-gray-700"
                     >
-                      <option>همه املاک</option>
-                      <option>آپارتمان</option>
-                      <option>ویلا</option>
-                      <option>مغازه</option>
-                      <option>دفتر</option>
+                      <option>{t("common.allProperties")}</option>
+                      <option>{t("common.apartment")}</option>
+                      <option>{t("common.villa")}</option>
+                      <option>{t("common.store")}</option>
+                      <option>{t("common.office")}</option>
                     </select>
 
                     <button
@@ -169,7 +181,7 @@ export default function HomePage() {
                           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                         />
                       </svg>
-                      جستجو کن
+                      {t("common.search")}
                     </button>
                   </div>
                 </div>
@@ -179,12 +191,12 @@ export default function HomePage() {
               {/* تگ‌های سریع زیر سرچ‌بار */}
               <div className="flex flex-wrap justify-center gap-3 mt-8">
                 {[
-                  "نوساز",
-                  "با پارکینگ",
-                  "جنوب شهر",
-                  "ویو آزاد",
-                  "تخفیف ویژه",
-                  "اجاره روزانه",
+                  t("home.quickTags.newBuild"),
+                  t("home.quickTags.withParking"),
+                  t("home.quickTags.southCity"),
+                  t("home.quickTags.freeView"),
+                  t("home.quickTags.specialDiscount"),
+                  t("home.quickTags.dailyRent"),
                 ].map((tag) => (
                   <span
                     key={tag}
@@ -198,16 +210,16 @@ export default function HomePage() {
           </section>
           {/* ==================== فایل‌های داغ امروز ==================== */}
           <section className="my-20">
-            <div className="flex items-center justify-between mb-10">
+            <div className={`flex items-center justify-between mb-10 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
               <h2 className="text-4xl md:text-5xl font-black flex items-center gap-4">
                 <FaFire className="text-orange-500 text-5xl" />
-                فایل‌های داغ امروز
+                {t("home.hotListingsToday")}
               </h2>
               <Link
                 href="/buy-residential"
                 className="text-blue-600 font-bold hover:underline"
               >
-                مشاهده همه ➤
+                {t("common.viewAll")} {isRTL ? '➤' : '←'}
               </Link>
             </div>
 
@@ -218,8 +230,8 @@ export default function HomePage() {
                   <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-3 transition-all group">
                     <div className="relative">
                       <div className="bg-gray-200 border-2 border-dashed rounded-t-2xl w-full h-48" />
-                      <span className="absolute top-4 left-4 bg-red-600 text-white px-4 py-1 rounded-full text-sm font-bold">
-                        جدید
+                      <span className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} bg-red-600 text-white px-4 py-1 rounded-full text-sm font-bold`}>
+                        {t("common.new")}
                       </span>
                     </div>
                     <div className="p-5">
@@ -239,11 +251,11 @@ export default function HomePage() {
             <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-10 md:p-16 text-white shadow-2xl">
               <h3 className="text-3xl md:text-5xl font-black text-center mb-10 flex items-center justify-center gap-4">
                 <FaCalculator className="text-5xl" />
-                چقدر وام می‌تونی بگیری؟
+                {t("home.loanCalculator.title")}
               </h3>
               <div className="grid md:grid-cols-3 gap-6 text-center">
                 <div>
-                  <p className="text-xl">متراژ ملک</p>
+                  <p className="text-xl">{t("home.loanCalculator.propertyArea")}</p>
                   <input
                     type="number"
                     defaultValue={100}
@@ -251,19 +263,19 @@ export default function HomePage() {
                   />
                 </div>
                 <div>
-                  <p className="text-xl">قیمت هر متر</p>
+                  <p className="text-xl">{t("home.loanCalculator.pricePerMeter")}</p>
                   <input
                     type="number"
                     defaultValue={120}
                     className="mt-3 w-full px-6 py-4 rounded-2xl text-gray-800 text-2xl font-bold text-center"
-                    placeholder="میلیون"
+                    placeholder={t("home.loanCalculator.million")}
                   />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <p className="text-5xl font-black">۹۶۰ میلیون</p>
-                  <p className="text-xl mt-2">وام مسکن قابل دریافت</p>
+                  <p className="text-5xl font-black">۹۶۰ {t("home.loanCalculator.million")}</p>
+                  <p className="text-xl mt-2">{t("home.loanCalculator.loanAmount")}</p>
                   <button className="mt-6 bg-white text-blue-600 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition mt-6">
-                    محاسبه دقیق ➤
+                    {t("home.loanCalculator.calculate")} {isRTL ? '➤' : '←'}
                   </button>
                 </div>
               </div>
@@ -273,7 +285,7 @@ export default function HomePage() {
           {/* اینا رو هم قشنگ‌تر کردم ولی کدشون رو کوتاه کردم که طولانی نشه */}
           <section className="max-w-6xl mx-auto my-32">
             <h2 className="text-4xl md:text-5xl font-black text-center mb-16">
-              چرا ما؟
+              {t("home.whyUs.title")}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {services.map((s, i) => (
@@ -301,47 +313,53 @@ export default function HomePage() {
                   <div className="flex flex-col justify-center space-y-10">
                     <div>
                       <span className="inline-block bg-cyan-400/30 backdrop-blur-sm text-cyan-100 px-4 py-2 rounded-full text-sm font-bold mb-4">
-                        فرصت شغلی ویژه
+                        {t("home.joinUs.badge")}
                       </span>
                       <h2 className="text-4xl md:text-6xl font-extrabold leading-tight">
-                        به تیم مشاوران برتر
-                        <br />
-                        <span className="text-cyan-300">ما بپیوندید!</span>
+                        {isRTL ? (
+                          <>
+                            {t("home.joinUs.title")}
+                            <br />
+                            <span className="text-cyan-300">{t("home.joinUs.titleHighlight")}</span>
+                          </>
+                        ) : (
+                          <>
+                            {t("home.joinUs.title")} {t("home.joinUs.titleHighlight")}
+                          </>
+                        )}
                       </h2>
                     </div>
 
                     <p className="text-lg md:text-xl text-gray-100 leading-relaxed max-w-lg">
-                      اگر عاشق املاک هستید، فروشنده حرفه‌ای هستید و دنبال درآمد
-                      بدون سقف می‌گردید، جای درست آمدید. ما بهترین فایل‌ها،
-                      بالاترین پورسانت و پشتیبانی کامل رو بهتون می‌دیم.
+                      {t("home.joinUs.description")}
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
                       {[
                         {
                           icon: FaChartLine,
-                          text: "درآمد ماهانه تا ۳۰۰ میلیون",
+                          text: t("home.joinUs.benefits.monthlyIncome"),
                           color: "text-green-300",
                         },
                         {
                           icon: FiTrendingUp,
-                          text: "پورسانت تا ۰.۷٪",
+                          text: t("home.joinUs.benefits.commission"),
                           color: "text-yellow-300",
                         },
                         {
                           icon: FaStar,
-                          text: "آموزش رایگان + منتورینگ",
+                          text: t("home.joinUs.benefits.training"),
                           color: "text-pink-300",
                         },
                         {
                           icon: FiCheckCircle,
-                          text: "فایل انحصاری روزانه",
+                          text: t("home.joinUs.benefits.exclusiveFiles"),
                           color: "text-cyan-300",
                         },
                       ].map((item, i) => (
                         <div
                           key={i}
-                          className="flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-5"
+                          className={`flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-5 ${isRTL ? '' : 'flex-row-reverse'}`}
                         >
                           <item.icon className={`text-3xl ${item.color}`} />
                           <span className="font-bold text-lg">{item.text}</span>
@@ -349,14 +367,14 @@ export default function HomePage() {
                       ))}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-6 mt-8">
+                    <div className={`flex flex-col sm:flex-row gap-6 mt-8 ${isRTL ? '' : 'flex-row-reverse'}`}>
                       <Link
                         href="/signup"
-                        className="group bg-white text-indigo-600 px-10 py-6 rounded-2xl font-black text-xl text-center shadow-2xl hover:scale-110 hover:shadow-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-3"
+                        className={`group bg-white text-indigo-600 px-10 py-6 rounded-2xl font-black text-xl text-center shadow-2xl hover:scale-110 hover:shadow-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-3`}
                       >
-                        همین حالا درخواست بده
+                        {t("home.joinUs.applyNow")}
                         <svg
-                          className="w-7 h-7 group-hover:translate-x-3 transition"
+                          className={`w-7 h-7 group-hover:${isRTL ? 'translate-x-3' : '-translate-x-3'} transition`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -365,7 +383,7 @@ export default function HomePage() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={3}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            d={isRTL ? "M17 8l4 4m0 0l-4 4m4-4H3" : "M7 16l-4-4m0 0l4-4m-4 4h18"}
                           />
                         </svg>
                       </Link>
@@ -375,7 +393,7 @@ export default function HomePage() {
                         target="_blank"
                         className="bg-green-500 hover:bg-green-600 text-white px-10 py-6 rounded-2xl font-black text-xl text-center shadow-xl hover:scale-105 transition flex items-center justify-center gap-3"
                       >
-                        واتساپ بزن
+                        {t("home.joinUs.whatsapp")}
                       </a>
                     </div>
                   </div>
@@ -386,13 +404,13 @@ export default function HomePage() {
                       <div className="absolute -inset-4 bg-cyan-400/30 blur-3xl animate-pulse rounded-full" />
                       <Image
                         src={joinUs}
-                        alt="تیم مشاوران حرفه‌ای"
+                        alt={t("home.joinUs.title")}
                         width={420}
                         height={500}
                         className="rounded-3xl shadow-2xl border-8 border-white/20 object-cover"
                       />
-                      <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-xl">
-                        ۴۲ مشاور فعال
+                      <div className={`absolute -bottom-6 ${isRTL ? '-left-6' : '-right-6'} bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-xl`}>
+                        42 {t("home.joinUs.activeAgents")}
                       </div>
                     </div>
 
@@ -400,15 +418,15 @@ export default function HomePage() {
                     <div className="grid grid-cols-2 gap-6 text-center">
                       <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6">
                         <p className="text-4xl font-black text-yellow-300">
-                          ۱,۲۳۴
+                          1,234
                         </p>
-                        <p className="text-lg mt-2">معامله موفق</p>
+                        <p className="text-lg mt-2">{t("home.joinUs.successfulDeals")}</p>
                       </div>
                       <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6">
                         <p className="text-4xl font-black text-green-300">
-                          ۸۷٪
+                          87%
                         </p>
-                        <p className="text-lg mt-2">رضایت مشاوران</p>
+                        <p className="text-lg mt-2">{t("home.joinUs.agentSatisfaction")}</p>
                       </div>
                     </div>
                   </div>

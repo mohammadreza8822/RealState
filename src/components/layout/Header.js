@@ -1,15 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { FiLogIn, FiMenu, FiX, FiHeart } from "react-icons/fi"; // FiHeart اضافه شد
+import { Link } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
+import { FiLogIn, FiMenu, FiX, FiHeart } from "react-icons/fi";
 import { FaUserAlt } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import HomeIcon from "@/public/images/home-icon.svg";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import LanguageSwitcher from "@/module/LanguageSwitcher";
 
 function Header() {
   const { data, status } = useSession();
+  const t = useTranslations();
+  const locale = useLocale();
+  const isRTL = locale === 'fa' || locale === 'ar';
   const isSuperAdmin = data?.user?.role === "SUPERADMIN";
   const isAdmin = data?.user?.role === "ADMIN" || isSuperAdmin;
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,13 +40,13 @@ function Header() {
   }, []);
 
   const navItems = [
-    { href: "/", label: "صفحه اصلی" },
-    { href: "/buy-residential", label: "آگهی‌ها" },
+    { href: "/", label: t("header.home") },
+    { href: "/buy-residential", label: t("header.ads") },
     ...(isSuperAdmin
-      ? [{ href: "/user-access", label: "دسترسی کاربران" }]
+      ? [{ href: "/user-access", label: t("header.userAccess") }]
       : []),
-    { href: "/about", label: "درباره ما" },
-    { href: "/contact", label: "تماس با ما" },
+    { href: "/about", label: t("header.about") },
+    { href: "/contact", label: t("header.contact") },
   ];
 
   return (
@@ -66,7 +71,7 @@ function Header() {
                   />
                 </div>
                 <span className="font-bold text-2xl text-[#304ffe]">
-                  سامانه املاک
+                  {t("header.siteName")}
                 </span>
               </Link>
 
@@ -85,6 +90,9 @@ function Header() {
 
             {/* دکمه‌ها + منوی موبایل */}
             <div className="flex items-center gap-4">
+              {/* تغییر زبان */}
+              <LanguageSwitcher />
+              
               {/* فقط وقتی لاگین کرده — دکمه علاقه‌مندی‌ها و داشبورد */}
               {data ? (
                 <>
@@ -94,9 +102,9 @@ function Header() {
                     className="relative flex items-center gap-3 bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                   >
                     <FiHeart className="text-xl" />
-                    علاقه‌مندی‌ها
+                    {t("common.favorites")}
                     {favoritesCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-white text-red-500 text-xs font-black w-6 h-6 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                      <span className={`absolute ${isRTL ? '-right-2' : '-left-2'} -top-2 bg-white text-red-500 text-xs font-black w-6 h-6 rounded-full flex items-center justify-center shadow-md animate-pulse`}>
                         {favoritesCount}
                       </span>
                     )}
@@ -108,7 +116,7 @@ function Header() {
                     className="flex items-center gap-3 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                   >
                     <FaUserAlt className="text-xl" />
-                    داشبورد
+                    {t("common.dashboard")}
                   </Link>
                 </>
               ) : (
@@ -118,7 +126,7 @@ function Header() {
                   className="flex items-center gap-3 bg-white text-[#304ffe] px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 border-2 border-[#304ffe]"
                 >
                   <FiLogIn className="text-xl" />
-                  ورود
+                  {t("common.login")}
                 </Link>
               )}
 
@@ -160,7 +168,7 @@ function Header() {
                     className="py-4 text-lg font-bold text-red-500 flex items-center gap-3 border-b border-gray-100"
                   >
                     <FiHeart className="text-xl fill-current" />
-                    علاقه‌مندی‌های من
+                    {t("common.myFavorites")}
                     {favoritesCount > 0 && (
                       <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                         {favoritesCount}

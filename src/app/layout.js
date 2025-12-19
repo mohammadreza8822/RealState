@@ -1,21 +1,20 @@
-import "../app/globals.css";
-import Layout from "@/layout/Layout";
-import { yekan } from "@/utils/fonts";
-import NextAuthProvider from "@/provides/NextAuthProvider";
+import { routing } from '@/i18n/routing';
+import './globals.css';
 
 export const metadata = {
-  title: "سامانه خرید و فروش املاک",
-  description: "سایت خرید و فروش املاک",
+  title: 'Real Estate System',
+  description: 'Real Estate Buy & Sell Website',
 };
 
+// Root layout - only provides html/body tags
+// Actual layout with Header/Footer is in [locale]/layout.js
 export default function RootLayout({ children }) {
+  const locale = routing.defaultLocale;
+  const isRTL = locale === 'fa' || locale === 'ar';
+
   return (
-    <html lang="fa" dir="rtl">
-      <body className={yekan.className}>
-        <NextAuthProvider>
-          <Layout>{children}</Layout>
-        </NextAuthProvider>
-      </body>
+    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
+      <body>{children}</body>
     </html>
   );
 }

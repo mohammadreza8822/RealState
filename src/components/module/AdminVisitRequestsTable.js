@@ -1,19 +1,20 @@
 // src/components/AdminVisitRequestsTable.jsx
 "use client";
 import { useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import PersianDate from "@/module/PersianDate";
 import toast from "react-hot-toast";
 
 // تابع‌های کمکی برای وضعیت - کاملاً آبی!
-const getStatusText = (status) => {
+const getStatusText = (status, t) => {
   const map = {
-    pending: "در انتظار",
-    confirmed: "تأیید شده",
-    rejected: "رد شده",
-    completed: "انجام شد",
-    canceled: "لغو شد",
+    pending: t("visitRequests.pending"),
+    confirmed: t("visitRequests.confirmed"),
+    rejected: t("visitRequests.rejected"),
+    completed: t("visitRequests.completed"),
+    canceled: t("visitRequests.canceled"),
   };
-  return map[status] || "نامشخص";
+  return map[status] || t("visitRequests.unknown");
 };
 
 const getStatusColor = (status) => {
@@ -29,6 +30,8 @@ const getStatusColor = (status) => {
 };
 
 export default function AdminVisitRequestsTable({ initialRequests }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [requests, setRequests] = useState(initialRequests);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -45,7 +48,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
 
   const copyPhone = (phone) => {
     navigator.clipboard.writeText(phone);
-    toast.success("شماره کپی شد!");
+    toast.success(t("visitRequests.phoneCopied"));
   };
 
   const updateStatus = async (id, newStatus) => {
@@ -61,9 +64,9 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
         body: JSON.stringify({ requestId: id, status: newStatus }),
       });
       if (!res.ok) throw new Error();
-      toast.success("وضعیت با موفقیت بروز شد");
+      toast.success(t("visitRequests.statusUpdated"));
     } catch (err) {
-      toast.error("خطا در بروزرسانی وضعیت");
+      toast.error(t("visitRequests.updateError"));
       // برگرداندن وضعیت قبلی
       setRequests((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: req.status } : r))
@@ -79,29 +82,30 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
-          dir="rtl"
-          placeholder="جستجو در نام، شماره یا آگهی..."
+          dir={locale === 'fa' || locale === 'ar' ? 'rtl' : 'ltr'}
+          placeholder={t("visitRequests.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-5 py-4 text-right border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition bg-white shadow-sm"
+          className={`w-full px-5 py-4 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition bg-white shadow-sm`}
         />
         <select
-          dir="rtl"
+          dir={locale === 'fa' || locale === 'ar' ? 'rtl' : 'ltr'}
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="w-full px-5 py-4 text-right border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white shadow-sm"
+          className={`w-full px-5 py-4 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white shadow-sm`}
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
-            backgroundPosition: "left 1rem center",
+            backgroundPosition: locale === 'fa' || locale === 'ar' ? "left 1rem center" : "right 1rem center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "16px",
-            paddingLeft: "3rem",
+            paddingLeft: locale === 'fa' || locale === 'ar' ? "3rem" : "1rem",
+            paddingRight: locale === 'fa' || locale === 'ar' ? "1rem" : "3rem",
           }}
         >
-          <option value="all">همه وضعیت‌ها</option>
-          <option value="pending">در انتظار</option>
-          <option value="confirmed">تأیید شده</option>
-          <option value="rejected">رد شده</option>
+          <option value="all">{t("visitRequests.allStatuses")}</option>
+          <option value="pending">{t("visitRequests.pending")}</option>
+          <option value="confirmed">{t("visitRequests.confirmed")}</option>
+          <option value="rejected">{t("visitRequests.rejected")}</option>
         </select>
       </div>
 
@@ -111,20 +115,20 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
           {/* هدر با گرادیان آبی فوق‌العاده */}
           <thead className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 text-white shadow-lg">
             <tr>
-              <th className="px-6 py-5 text-right text-sm md:text-base font-semibold">
-                آگهی
+              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+                {t("visitRequests.ad")}
               </th>
-              <th className="px-6 py-5 text-right text-sm md:text-base font-semibold">
-                درخواست‌دهنده
+              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+                {t("visitRequests.requester")}
               </th>
-              <th className="px-6 py-5 text-right text-sm md:text-base font-semibold">
-                تاریخ و ساعت
+              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+                {t("visitRequests.dateTime")}
               </th>
-              <th className="px-6 py-5 text-right text-sm md:text-base font-semibold">
-                وضعیت
+              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+                {t("visitRequests.status")}
               </th>
-              <th className="px-6 py-5 text-right text-sm md:text-base font-semibold">
-                عملیات
+              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+                {t("visitRequests.actions")}
               </th>
             </tr>
           </thead>
@@ -135,7 +139,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                   colSpan="5"
                   className="text-center py-20 text-gray-400 text-lg"
                 >
-                  هیچ درخواستی یافت نشد
+                  {t("visitRequests.noRequests")}
                 </td>
               </tr>
             ) : (
@@ -175,7 +179,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                       <PersianDate date={req.preferredDate} />
                     </p>
                     <p className="text-cyan-600 text-sm font-medium mt-1">
-                      {req.preferredTime || "نامشخص"}
+                      {req.preferredTime || t("visitRequests.unknown")}
                     </p>
                   </td>
 
@@ -186,7 +190,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                         req.status
                       )}`}
                     >
-                      {getStatusText(req.status)}
+                      {getStatusText(req.status, t)}
                     </span>
                   </td>
 
@@ -197,13 +201,13 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                         href={`tel:${req.userPhone}`}
                         className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-cyan-700 transform hover:scale-105 transition-all shadow-lg text-sm font-bold"
                       >
-                        تماس
+                        {t("visitRequests.call")}
                       </a>
                       <button
                         onClick={() => copyPhone(req.userPhone)}
                         className="bg-blue-50 hover:bg-blue-100 text-blue-700 px-6 py-3 rounded-xl transition-all shadow-md text-sm font-bold border border-blue-200"
                       >
-                        کپی شماره
+                        {t("visitRequests.copyPhone")}
                       </button>
                     </div>
                   </td>
@@ -215,7 +219,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
       </div>
 
       <p className="text-center text-sm text-blue-500 mt-6 block md:hidden font-medium">
-        ← برای دیدن همه ستون‌ها، به چپ بکشید →
+        {t("visitRequests.swipeHint")}
       </p>
     </div>
   );

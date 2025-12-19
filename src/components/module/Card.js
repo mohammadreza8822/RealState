@@ -1,4 +1,7 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -7,10 +10,19 @@ import { icons } from "@/constants/icons";
 import FavoriteButton from "../module/FavoriteButton.js";
 
 function Card({ data }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const { _id, category, title, location, price, image } = data;
   // اگر آرایه بود (مثل images) → اولین عکس رو نشون بده، اگر تک عکس بود → مستقیم
 
   const mainImage = Array.isArray(image) ? image[0] : image;
+  
+  const categoryLabels = {
+    villa: t("detailsPage.categories.villa"),
+    apartment: t("detailsPage.categories.apartment"),
+    store: t("detailsPage.categories.store"),
+    office: t("detailsPage.categories.office"),
+  };
 
   return (
     <div className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-[#304ffe]/30">
@@ -41,17 +53,14 @@ function Card({ data }) {
               {icons[category] || icons.apartment}
             </div>
             <span className="text-gray-500 font-medium text-sm">
-              بدون تصویر
+              {t("detailsPage.noImage")}
             </span>
           </div>
         )}
 
         {/* برچسب دسته‌بندی روی عکس */}
-        <div className="absolute top-4 right-4 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg z-10">
-          {category === "villa" && "ویلا"}
-          {category === "apartment" && "آپارتمان"}
-          {category === "store" && "مغازه"}
-          {category === "office" && "دفتر"}
+        <div className={`absolute top-4 ${locale === 'fa' || locale === 'ar' ? 'right-4' : 'left-4'} bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg z-10`}>
+          {categoryLabels[category] || category}
         </div>
 
         {/* گرادیانت پایین عکس */}
@@ -72,9 +81,9 @@ function Card({ data }) {
         </p>
 
         {/* قیمت — برجسته و جذاب */}
-        <div className="flex items-center justify-between">
+        <div className={`flex items-center justify-between ${locale === 'fa' || locale === 'ar' ? '' : 'flex-row-reverse'}`}>
           <div className="bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-5 py-3 rounded-2xl font-bold text-lg shadow-lg">
-            {sp(price)} تومان
+            {sp(price)} {locale === 'fa' ? 'تومان' : locale === 'ar' ? 'ريال' : 'Toman'}
           </div>
 
           {/* آیکون دسته‌بندی پایین */}
@@ -86,10 +95,10 @@ function Card({ data }) {
         {/* دکمه مشاهده */}
         <Link
           href={`/buy-residential/${_id}`}
-          className="flex items-center justify-between w-full bg-gradient-to-r from-[#304ffe] to-blue-600 hover:from-blue-600 hover:to-[#304ffe] text-white font-bold py-4 px-6 rounded-2xl transition-all duration-500 shadow-lg hover:shadow-2xl transform hover:-translate-y-1"
+          className={`flex items-center justify-between w-full bg-gradient-to-r from-[#304ffe] to-blue-600 hover:from-blue-600 hover:to-[#304ffe] text-white font-bold py-4 px-6 rounded-2xl transition-all duration-500 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 ${locale === 'fa' || locale === 'ar' ? '' : 'flex-row-reverse'}`}
         >
-          <span className="text-base">مشاهده آگهی</span>
-          <BiLeftArrowAlt className="text-2xl transform group-hover:-translate-x-3 transition-transform duration-500" />
+          <span className="text-base">{t("common.viewAd")}</span>
+          <BiLeftArrowAlt className={`text-2xl transform group-hover:${locale === 'fa' || locale === 'ar' ? '-translate-x-3' : 'translate-x-3'} transition-transform duration-500`} />
         </Link>
       </div>
 

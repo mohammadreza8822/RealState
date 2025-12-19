@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { HiX } from "react-icons/hi";
 
 export default function AdvancedFilter() {
+  const t = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -82,7 +85,7 @@ export default function AdvancedFilter() {
             isOpen ? "rotate-90" : ""
           }`}
         />
-        فیلترها {hasActiveFilter && "(فعال)"}
+        {t("filter.title")} {hasActiveFilter && `(${t("filter.active")})`}
       </button>
 
       {/* پنل فیلتر */}
@@ -103,7 +106,7 @@ export default function AdvancedFilter() {
           {/* هدر موبایل */}
           {isOpen && (
             <div className="flex justify-between items-center mb-6 pb-4 border-b">
-              <h3 className="text-2xl font-extrabold text-gray-800">فیلترها</h3>
+              <h3 className="text-2xl font-extrabold text-gray-800">{t("filter.title")}</h3>
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-gray-500"
@@ -119,7 +122,7 @@ export default function AdvancedFilter() {
               {/* دسته‌بندی — فلش از چپ فاصله داره + کاملاً تمیز */}
               <div className="flex-1 min-w-[200px]">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  دسته‌بندی
+                  {t("filter.category")}
                 </label>
                 <div className="relative">
                   <select
@@ -127,11 +130,11 @@ export default function AdvancedFilter() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full px-5 py-3 pl-12 pr-4 rounded-xl border border-gray-300 focus:border-[#304ffe] focus:ring-4 focus:ring-blue-100 transition appearance-none bg-white text-right"
                   >
-                    <option value="all">همه املاک</option>
-                    <option value="apartment">آپارتمان</option>
-                    <option value="villa">ویلا</option>
-                    <option value="store">مغازه</option>
-                    <option value="office">دفتر</option>
+                    <option value="all">{t("filter.allProperties")}</option>
+                    <option value="apartment">{t("common.apartment")}</option>
+                    <option value="villa">{t("common.villa")}</option>
+                    <option value="store">{t("common.store")}</option>
+                    <option value="office">{t("common.office")}</option>
                   </select>
 
                   {/* فلش پیش‌فرض مرورگر رو با فاصله می‌ذاریم سمت چپ */}
@@ -156,13 +159,13 @@ export default function AdvancedFilter() {
               {/* از قیمت */}
               <div className="flex-1 min-w-[170px]">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  از قیمت
+                  {t("filter.fromPrice")}
                 </label>
                 <input
                   type="number"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  placeholder="۵۰۰ میلیون"
+                  placeholder={t("filter.fromPricePlaceholder")}
                   className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#304ffe]"
                 />
               </div>
@@ -170,13 +173,13 @@ export default function AdvancedFilter() {
               {/* تا قیمت */}
               <div className="flex-1 min-w-[170px]">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  تا قیمت
+                  {t("filter.toPrice")}
                 </label>
                 <input
                   type="number"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  placeholder="۱۰ میلیارد"
+                  placeholder={t("filter.toPricePlaceholder")}
                   className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#304ffe]"
                 />
               </div>
@@ -184,13 +187,13 @@ export default function AdvancedFilter() {
               {/* متراژ از */}
               <div className="flex-1 min-w-[130px]">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  متراژ از
+                  {t("filter.fromArea")}
                 </label>
                 <input
                   type="number"
                   value={minArea}
                   onChange={(e) => setMinArea(e.target.value)}
-                  placeholder="80"
+                  placeholder={t("filter.fromAreaPlaceholder")}
                   className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#304ffe]"
                 />
               </div>
@@ -198,13 +201,13 @@ export default function AdvancedFilter() {
               {/* متراژ تا */}
               <div className="flex-1 min-w-[130px]">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  متراژ تا
+                  {t("filter.toArea")}
                 </label>
                 <input
                   type="number"
                   value={maxArea}
                   onChange={(e) => setMaxArea(e.target.value)}
-                  placeholder="300"
+                  placeholder={t("filter.toAreaPlaceholder")}
                   className="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#304ffe]"
                 />
               </div>
@@ -216,7 +219,7 @@ export default function AdvancedFilter() {
                     onClick={clearFilters}
                     className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2 whitespace-nowrap"
                   >
-                    پاک کردن همه
+                    {t("filter.clearAll")}
                   </button>
                 </div>
               )}
