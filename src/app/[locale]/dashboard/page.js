@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import DashboardPage from "@/template/DashboardPage";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/api/auth/[...nextauth]/route";
 import connectDB from "@/utils/connectDB";
 import User from "@/models/User";
 
