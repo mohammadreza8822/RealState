@@ -7,7 +7,7 @@ async function Edit({ params: { profileId } }) {
   const profile = await Profile.findOne({ _id: profileId });
 
   if (!profile) {
-    return <h3>مشکلی پیش آمده است لطفا دوباره امتحان کنید</h3>;
+    return <h3>Something went wrong, please try again</h3>;
   }
 
   return (

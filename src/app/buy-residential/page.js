@@ -1,8 +1,10 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = 'force-dynamic';
 
 export default async function BuyResidential({ searchParams }) {
+  const t = await getTranslations();
   const category = searchParams?.category || null;
 
   try {
@@ -17,7 +19,7 @@ export default async function BuyResidential({ searchParams }) {
     );
 
     if (!res.ok) {
-      throw new Error("خطا در ارتباط با سرور");
+      throw new Error(t("buyResidential.serverError"));
     }
 
     const { data } = await res.json();
@@ -27,9 +29,9 @@ export default async function BuyResidential({ searchParams }) {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
           <div className="text-center">
             <h3 className="text-3xl font-bold text-red-600 mb-4">
-              خطا در دریافت اطلاعات
+              {t("buyResidential.dataError")}
             </h3>
-            <p className="text-gray-600">لطفاً دوباره تلاش کنید</p>
+            <p className="text-gray-600">{t("buyResidential.tryAgain")}</p>
           </div>
         </div>
       );
@@ -50,18 +52,18 @@ export default async function BuyResidential({ searchParams }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="text-center bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-12 border border-red-100">
-          <div className="text-9xl mb-6 opacity-20">خطا</div>
+          <div className="text-9xl mb-6 opacity-20">{t("buyResidential.error")}</div>
           <h3 className="text-4xl font-extrabold text-red-600 mb-6">
-            مشکلی پیش آمده است
+            {t("buyResidential.somethingWrong")}
           </h3>
           <p className="text-lg text-gray-600 mb-8">
-            لطفاً صفحه را رفرش کنید یا بعداً مراجعه کنید.
+            {t("buyResidential.refreshPage")}
           </p>
           <a
             href="/buy-residential"
             className="inline-block px-8 py-4 bg-[#304ffe] text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg"
           >
-            تلاش مجدد
+            {t("buyResidential.retry")}
           </a>
         </div>
       </div>
@@ -70,8 +72,10 @@ export default async function BuyResidential({ searchParams }) {
 }
 
 // اختیاری: متادیتا برای سئو
-export const metadata = {
-  title: "خرید ملک مسکونی | سامانه خرید و اجاره املاک",
-  description:
-    "بهترین آگهی‌های خرید آپارتمان، ویلا، مغازه و دفتر در سراسر ایران",
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return {
+    title: `${t("buyResidential.title")} | ${t("metadata.title")}`,
+    description: t("metadata.description"),
 };
+}

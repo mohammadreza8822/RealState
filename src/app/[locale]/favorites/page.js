@@ -22,6 +22,22 @@ export default async function FavoritesPage() {
 
   await connectDB();
   const user = await User.findOne({ email: session.user.email });
+  
+  if (!user || !user.favorites || !Array.isArray(user.favorites) || user.favorites.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
+        <div className="container mx-auto max-w-7xl">
+          <h1 className="text-5xl font-extrabold text-center text-[#304ffe] mb-10">
+            {t("favorites.title")}
+          </h1>
+          <p className="text-center text-xl text-gray-600">
+            {t("favorites.noFavorites")}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const favorites = await Profile.find({
     _id: { $in: user.favorites },
     published: true,

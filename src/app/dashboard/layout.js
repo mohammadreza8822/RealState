@@ -21,7 +21,7 @@ async function DashboardLayout({ children }) {
   await connectDB();
   const user = await User.findOne({ email: session.user.email });
 
-  if (!user) return <h3>مشکلی پیش آمده است</h3>;
+  if (!user) return <h3>Something went wrong</h3>;
 
   return (
     <DashboardSidebar role={user.role} email={user.email}>

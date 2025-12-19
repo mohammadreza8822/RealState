@@ -59,6 +59,7 @@ export async function POST(req) {
     const phone = formData.get("phone");
     const realState = formData.get("realState");
     const price = formData.get("price");
+    const size = formData.get("size");
     const category = formData.get("category");
     const constructionDate = formData.get("constructionDate");
 
@@ -78,6 +79,7 @@ export async function POST(req) {
       !phone ||
       !realState ||
       !price ||
+      !size ||
       !category
     ) {
       return NextResponse.json(
@@ -108,6 +110,7 @@ export async function POST(req) {
       phone,
       realState,
       price: Number(price),
+      size: Number(size),
       constructionDate: new Date(constructionDate),
       category,
       amenities,
@@ -170,6 +173,7 @@ export async function PATCH(req) {
     profile.phone = formData.get("phone");
     profile.realState = formData.get("realState");
     profile.price = Number(formData.get("price"));
+    profile.size = Number(formData.get("size"));
     profile.category = formData.get("category");
     profile.constructionDate = new Date(formData.get("constructionDate"));
 

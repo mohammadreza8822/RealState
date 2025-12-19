@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import RadioList from "@/module/RadioList";
 import TextInput from "@/module/TextInput";
 import TextList from "@/module/TextList";
@@ -10,6 +11,7 @@ import CustomDatePicker from "@/module/CustomDatePicker";
 import Loader from "@/module/Loader";
 
 function AddProfilePage({ data }) {
+  const t = useTranslations();
   const [profileData, setProfileData] = useState({
     title: "",
     description: "",
@@ -125,7 +127,7 @@ function AddProfilePage({ data }) {
         router.push("/dashboard/my-profiles");
       }
     } catch (err) {
-      toast.error("خطایی رخ داد");
+      toast.error(t("addProfile.error"));
     } finally {
       setLoading(false);
     }
@@ -134,11 +136,11 @@ function AddProfilePage({ data }) {
   return (
     <div className="flex flex-col mb-40 animate-fadeIn">
       <h3 className="text-2xl text-primary bg-primary/10 rounded-xl px-4 py-3 mb-10">
-        {data ? "ویرایش آگهی" : "ثبت آگهی"}
+        {data ? t("addProfile.editTitle") : t("addProfile.title")}
       </h3>
       {/* ===== بخش آپلود عکس ===== */}
       <div className="mb-8">
-        <label className="block text-lg font-medium mb-3">تصاویر آگهی</label>
+        <label className="block text-lg font-medium mb-3">{t("addProfile.images")}</label>
 
         <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
           <input
@@ -151,7 +153,7 @@ function AddProfilePage({ data }) {
           />
           <label htmlFor="image-upload" className="cursor-pointer inline-block">
             <div className="bg-primary/10 text-primary px-6 py-3 rounded-lg hover:bg-primary/20 transition">
-              انتخاب عکس‌ها (حداکثر ۱۰ عکس)
+              {t("addProfile.selectImages")}
             </div>
           </label>
         </div>
@@ -179,50 +181,50 @@ function AddProfilePage({ data }) {
       </div>
       {/* بقیه فیلدها */}
       <TextInput
-        title="عنوان آگهی"
+        title={t("addProfile.adTitle")}
         name="title"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="توضیحات"
+        title={t("addProfile.description")}
         name="description"
         profileData={profileData}
         setProfileData={setProfileData}
         textarea={true}
       />
       <TextInput
-        title="آدرس"
+        title={t("addProfile.address")}
         name="location"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="شماره تماس"
+        title={t("addProfile.phone")}
         name="phone"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="قیمت(تومان)"
+        title={t("addProfile.price")}
         name="price"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="متراژ (متر مربع)"
+        title={t("addProfile.size")}
         name="size"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="ادرس"
+        title={t("addProfile.address")}
         name="address"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextInput
-        title="بنگاه"
+        title={t("addProfile.realState")}
         name="realState"
         profileData={profileData}
         setProfileData={setProfileData}
@@ -231,13 +233,13 @@ function AddProfilePage({ data }) {
       <RadioList profileData={profileData} setProfileData={setProfileData} />
 
       <TextList
-        title="امکانات رفاهی"
+        title={t("addProfile.amenities")}
         type="amenities"
         profileData={profileData}
         setProfileData={setProfileData}
       />
       <TextList
-        title="قوانین"
+        title={t("addProfile.rules")}
         type="rules"
         profileData={profileData}
         setProfileData={setProfileData}
@@ -257,7 +259,7 @@ function AddProfilePage({ data }) {
           onClick={submitHandler}
           className="bg-primary text-white text-base rounded-lg px-6 py-4 hover:scale-105 transition-transform duration-200 shadow-lg"
         >
-          {data ? "ویرایش آگهی" : "ثبت آگهی"}
+          {data ? t("addProfile.editTitle") : t("addProfile.title")}
         </button>
       )}
     </div>

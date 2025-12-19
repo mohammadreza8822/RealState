@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "@/i18n/routing";
+import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { HiX } from "react-icons/hi";
@@ -9,7 +9,11 @@ import { HiX } from "react-icons/hi";
 export default function AdvancedFilter() {
   const t = useTranslations();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  
+  // Check if we're on favorites page
+  const isFavoritesPage = pathname?.includes('/favorites');
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,14 +41,16 @@ export default function AdvancedFilter() {
     if (minArea) params.set("minArea", minArea);
     if (maxArea) params.set("maxArea", maxArea);
 
+    // اگر در صفحه favorites هستیم، به favorites redirect کن، وگرنه به buy-residential
+    const basePath = isFavoritesPage ? '/favorites' : '/buy-residential';
     const newUrl = params.toString()
-      ? `/buy-residential?${params.toString()}`
-      : "/buy-residential";
+      ? `${basePath}?${params.toString()}`
+      : basePath;
 
     if (window.location.pathname + window.location.search !== newUrl) {
       router.replace(newUrl, { scroll: false });
     }
-  }, [category, minPrice, maxPrice, minArea, maxArea, router]);
+  }, [category, minPrice, maxPrice, minArea, maxArea, router, isFavoritesPage]);
 
   // همگام‌سازی با URL خارجی (مثل رفرش)
   useEffect(() => {
@@ -62,7 +68,9 @@ export default function AdvancedFilter() {
     setMaxPrice("");
     setMinArea("");
     setMaxArea("");
-    router.replace("/buy-residential", { scroll: false });
+    // اگر در صفحه favorites هستیم، به favorites redirect کن، وگرنه به buy-residential
+    const basePath = isFavoritesPage ? '/favorites' : '/buy-residential';
+    router.replace(basePath, { scroll: false });
     setIsOpen(false);
   };
 

@@ -3,27 +3,31 @@ import connectDB from "@/utils/connectDB";
 import ContactUs from "@/models/ContactUs"; // مرحله ۲ این مدل رو می‌سازیم
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getTranslations, getLocale } from "next-intl/server";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic"; // خیلی مهم! بدون این پیام‌ها آپدیت نمی‌شن
 
 export default async function ContactUsAnswers() {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const session = await getServerSession(authOptions);
+  const isRTL = locale === 'fa' || locale === 'ar';
 
   // فقط ادمین و سوپرادمین اجازه دارن
   if (!session || !["ADMIN", "SUPERADMIN"].includes(session.user.role)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-xl p-10 text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">دسترسی ممنوع</h1>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">{t("contactUsAnswers.accessDenied")}</h1>
           <p className="text-gray-600">
-            فقط مدیران می‌توانند پیام‌های تماس را ببینند.
+            {t("contactUsAnswers.adminOnly")}
           </p>
           <Link
             href="/dashboard"
             className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition"
           >
-            بازگشت به داشبورد
+            {t("contactUsAnswers.backToDashboard")}
           </Link>
         </div>
       </div>
@@ -39,31 +43,31 @@ export default async function ContactUsAnswers() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-blue-700">
-              پیام‌های تماس با ما ({messages.length})
+              {t("contactUsAnswers.title")} ({messages.length})
             </h1>
             <Link
               href="/dashboard"
               className="bg-gray-600 text-white px-5 py-3 rounded-xl hover:bg-gray-700 transition"
             >
-              بازگشت به داشبورد
+              {t("contactUsAnswers.backToDashboard")}
             </Link>
           </div>
 
           {messages.length === 0 ? (
             <p className="text-center text-gray-500 py-10">
-              هنوز هیچ پیامی ارسال نشده است.
+              {t("contactUsAnswers.noMessages")}
             </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-right border-collapse">
                 <thead>
                   <tr className="bg-blue-600 text-white">
-                    <th className="p-4 rounded-tr-xl">تاریخ</th>
-                    <th className="p-4">نام</th>
-                    <th className="p-4">تلفن</th>
-                    <th className="p-4">ایمیل</th>
-                    <th className="p-4">موضوع</th>
-                    <th className="p-4 rounded-tl-xl">پیام</th>
+                    <th className="p-4 rounded-tr-xl">{t("contactUsAnswers.date")}</th>
+                    <th className="p-4">{t("contactUsAnswers.name")}</th>
+                    <th className="p-4">{t("contactUsAnswers.phone")}</th>
+                    <th className="p-4">{t("contactUsAnswers.email")}</th>
+                    <th className="p-4">{t("contactUsAnswers.subject")}</th>
+                    <th className="p-4 rounded-tl-xl">{t("contactUsAnswers.message")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,9 +79,9 @@ export default async function ContactUsAnswers() {
                       }`}
                     >
                       <td className="p-4 text-sm">
-                        {new Date(msg.createdAt).toLocaleDateString("fa-IR")}{" "}
+                        {new Date(msg.createdAt).toLocaleDateString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US')}{" "}
                         <br />
-                        {new Date(msg.createdAt).toLocaleTimeString("fa-IR", {
+                        {new Date(msg.createdAt).toLocaleTimeString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US', {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}

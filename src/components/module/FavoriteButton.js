@@ -11,16 +11,23 @@ export default function FavoriteButton({ adId, size = "normal" }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Ensure adId is converted to string
+  const adIdString = adId?.toString?.() || String(adId);
+
   useEffect(() => {
-    if (status === "authenticated" && adId) {
-      fetch(`/api/favorites/check/${adId}`, { cache: "no-store" })
+    if (status === "authenticated" && adIdString) {
+      fetch(`/api/favorites/check/${adIdString}`, { cache: "no-store" })
         .then((res) => res.json())
         .then((data) => setIsFavorite(data.isFavorite))
+        .catch((err) => {
+          console.error("Error checking favorite:", err);
+          setIsFavorite(false);
+        })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [status, adId]);
+  }, [status, adIdString]);
 
   const toggleFavorite = async () => {
     if (status !== "authenticated") {
@@ -28,10 +35,26 @@ export default function FavoriteButton({ adId, size = "normal" }) {
       return;
     }
 
-    const res = await fetch(`/api/favorites/${adId}`, { method: "POST" });
-    if (res.ok) {
-      const data = await res.json();
-      setIsFavorite(data.isFavorite);
+    if (!adIdString) {
+      console.error("No adId provided");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/favorites/${adIdString}`, { 
+        method: "POST",
+        cache: "no-store"
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setIsFavorite(data.isFavorite);
+      } else {
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }));
+        console.error("Error toggling favorite:", errorData.error, errorData.details);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
     }
   };
 

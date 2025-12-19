@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "@/i18n/routing";
+import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Card from "@/module/Card";
@@ -10,7 +10,11 @@ import AdvancedFilter from "@/module/AdvancedFilter";
 export default function BuyResidentialPage({ data: initialData = [] }) {
   const t = useTranslations();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  
+  // Check if we're on favorites page
+  const isFavoritesPage = pathname?.includes('/favorites');
 
   // خواندن مقادیر فیلتر از URL
   const currentCategory = searchParams.get("category") || "all";
@@ -46,7 +50,9 @@ export default function BuyResidentialPage({ data: initialData = [] }) {
     if (areaTo) params.set("maxArea", areaTo);
 
     // برو به URL جدید (بدون رفرش کامل)
-    router.push(`/buy-residential?${params.toString()}`);
+    // اگر در صفحه favorites هستیم، به favorites redirect کن، وگرنه به buy-residential
+    const targetPath = isFavoritesPage ? '/favorites' : '/buy-residential';
+    router.push(`${targetPath}?${params.toString()}`);
   };
 
   // فیلتر کردن داده‌ها در کلاینت (موقت — بعداً از سرور می‌گیریم)

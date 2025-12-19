@@ -22,7 +22,7 @@ function TextInput({
         <textarea
           type="text"
           name={name}
-          value={profileData[name]}
+          value={profileData[name] || ""}
           onChange={changeHandler}
           className={`${baseInputClasses} h-[100px] resize-y`}
         />
@@ -30,7 +30,7 @@ function TextInput({
         <input
           type="text"
           name={name}
-          value={profileData[name]}
+          value={profileData[name] || ""}
           onChange={changeHandler}
           className={`${baseInputClasses} h-10`}
         />

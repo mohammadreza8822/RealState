@@ -64,7 +64,7 @@ function Header() {
                 <div className="w-12 h-12 bg-gradient-to-br from-[#304ffe] to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Image
                     src={HomeIcon}
-                    alt="خانه"
+                    alt={t("header.home")}
                     width={28}
                     height={28}
                     className="brightness-0 invert"
