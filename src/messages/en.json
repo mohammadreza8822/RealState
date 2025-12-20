@@ -432,6 +432,30 @@
     "email": "Email",
     "subject": "Subject",
     "message": "Message"
+  },
+  "signin": {
+    "title": "Sign In Form",
+    "email": "Email:",
+    "password": "Password:",
+    "submit": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signup": "Sign Up"
+  },
+  "signup": {
+    "title": "Sign Up Form",
+    "email": "Email:",
+    "password": "Password:",
+    "rePassword": "Confirm Password:",
+    "consultantRequest": "I want to work as a real estate consultant",
+    "submitRequest": "Submit Consultant Request",
+    "submit": "Sign Up",
+    "hasAccount": "Already have an account?",
+    "signin": "Sign In",
+    "passwordMismatch": "Password and confirmation do not match!",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "successConsultant": "Registration successful! Your consultant request is pending admin approval",
+    "success": "Registration successful! Please sign in now",
+    "error": "An error occurred"
   }
 }
 

@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import Loader from "@/module/Loader";
 
 function SignUpPage() {
+  const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
@@ -19,12 +21,12 @@ function SignUpPage() {
     e.preventDefault();
 
     if (password !== rePassword) {
-      toast.error("رمز و تکرار آن برابر نیست!");
+      toast.error(t("signup.passwordMismatch"));
       return;
     }
 
     if (password.length < 6) {
-      toast.error("رمز عبور باید حداقل ۶ کاراکتر باشد");
+      toast.error(t("signup.passwordMinLength"));
       return;
     }
 
@@ -47,23 +49,23 @@ function SignUpPage() {
     if (res.status === 201) {
       toast.success(
         isConsultant
-          ? "ثبت‌نام شد! درخواست مشاور شدن شما در انتظار تأیید مدیر است"
-          : "ثبت‌نام با موفقیت انجام شد! حالا وارد شوید"
+          ? t("signup.successConsultant")
+          : t("signup.success")
       );
       router.push("/signin");
     } else {
-      toast.error(data.error || "خطایی رخ داد");
+      toast.error(data.error || t("signup.error"));
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center h-[90vh] my-20">
       <h4 className="text-[#304ffe] font-semibold text-2xl mb-5">
-        فرم ثبت نام
+        {t("signup.title")}
       </h4>
 
       <form className="flex flex-col max-w-[700px] shadow-[0px_4px_15px_#304ffe4a] border-2 border-[#304ffe] p-10 rounded-lg mb-8">
-        <label className="text-[#304ffe] mb-2.5 font-normal">ایمیل:</label>
+        <label className="text-[#304ffe] mb-2.5 font-normal">{t("signup.email")}</label>
         <input
           type="email"
           required
@@ -72,7 +74,7 @@ function SignUpPage() {
           className="mb-10 w-[350px] border border-[#304ffe] border-dashed text-gray-700 rounded-md p-2.5 ltr h-12 text-base focus:border-solid focus:outline-none"
         />
 
-        <label className="text-[#304ffe] mb-2.5 font-normal">رمز عبور:</label>
+        <label className="text-[#304ffe] mb-2.5 font-normal">{t("signup.password")}</label>
         <input
           type="password"
           required
@@ -82,7 +84,7 @@ function SignUpPage() {
         />
 
         <label className="text-[#304ffe] mb-2.5 font-normal">
-          تکرار رمز عبور:
+          {t("signup.rePassword")}
         </label>
         <input
           type="password"
@@ -105,7 +107,7 @@ function SignUpPage() {
             htmlFor="consultant"
             className="text-amber-800 font-bold cursor-pointer select-none"
           >
-            می‌خواهم به عنوان مشاور املاک فعالیت کنم
+            {t("signup.consultantRequest")}
           </label>
         </div>
 
@@ -119,18 +121,18 @@ function SignUpPage() {
             onClick={signUpHandler}
             className="border-none bg-[#304ffe] text-white text-lg font-bold rounded-md py-4 hover:scale-105 transition-all shadow-lg"
           >
-            {isConsultant ? "ارسال درخواست مشاور" : "ثبت نام"}
+            {isConsultant ? t("signup.submitRequest") : t("signup.submit")}
           </button>
         )}
       </form>
 
       <p className="text-gray-500 text-lg mb-20">
-        حساب کاربری دارید؟{" "}
+        {t("signup.hasAccount")}{" "}
         <Link
           href="/signin"
           className="text-[#304ffe] font-bold border-b-2 border-[#304ffe] pb-1"
         >
-          ورود
+          {t("signup.signin")}
         </Link>
       </p>
 
