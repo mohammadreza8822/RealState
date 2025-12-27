@@ -8,16 +8,16 @@ export default function Footer() {
   const t = useTranslations();
   const locale = useLocale();
   const currentYear = new Date().getFullYear();
-  const isRTL = locale === 'fa' || locale === 'ar';
+  const isRTL = locale === "fa" || locale === "ar";
 
   // اسمت رو اینجا عوض کن
   const developerName = "محمدرضا اصغری";
   const linkedinUrl =
     "https://www.linkedin.com/in/mohammadreza-asghary-3b6a54322/";
   const githubUrl = "https://github.com/mohammadreza8822";
-  
-  const textAlign = isRTL ? 'md:text-right' : 'md:text-left';
-  const itemsAlign = isRTL ? 'md:items-end' : 'md:items-start';
+
+  const textAlign = isRTL ? "md:text-right" : "md:text-left";
+  const itemsAlign = isRTL ? "md:items-end" : "md:items-start";
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
@@ -25,7 +25,9 @@ export default function Footer() {
       <div className="h-1 bg-gradient-to-r from-[#304ffe] via-blue-500 to-cyan-500" />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className={`grid grid-cols-1 md:grid-cols-4 gap-8 text-center ${textAlign}`}>
+        <div
+          className={`grid grid-cols-1 md:grid-cols-4 gap-8 text-center ${textAlign}`}
+        >
           {/* ستون ۱: لوگو و توضیح */}
           <div className={`flex flex-col items-center ${itemsAlign}`}>
             <div className="flex items-center gap-3 mb-4">
@@ -92,14 +94,16 @@ export default function Footer() {
               <p className="text-gray-500 text-sm">
                 © {currentYear} {t("footer.siteName")}
               </p>
-              <p className="text-gray-500 text-xs mt-1">{t("footer.copyright")}</p>
+              <p className="text-gray-500 text-xs mt-1">
+                {t("footer.copyright")}
+              </p>
             </div>
 
             {/* بخش توسعه‌دهنده — غرورآفرین و حرفه‌ای */}
             {/* <div className="bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-md"> */}
-            {/* <p className="text-gray-700 text-sm font-medium whitespace-nowrap">
-                طراحی و توسعه توسط
-              </p> */}
+            <p className="text-gray-700 text-sm font-medium whitespace-nowrap">
+              طراحی و توسعه توسط جاسم الباسط
+            </p>
             {/* <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
                 <span className="font-bold text-[#304ffe]">
                   {developerName}

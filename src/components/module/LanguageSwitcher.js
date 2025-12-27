@@ -3,7 +3,6 @@
 import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { useState } from 'react';
-import { FiGlobe } from 'react-icons/fi';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -14,7 +13,7 @@ export default function LanguageSwitcher() {
   const isRTL = locale === 'fa' || locale === 'ar';
 
   const languages = [
-    { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
+    // { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
     { code: 'en', name: 'English', flag: '🇬🇧' },
     { code: 'ar', name: 'العربية', flag: '🇸🇦' }
   ];
