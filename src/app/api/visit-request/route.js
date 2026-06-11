@@ -25,17 +25,14 @@ export async function POST(request) {
       !phone ||
       !preferredDate
     ) {
-      return Response.json(
-        { message: "اطلاعات ضروری ناقص است" },
-        { status: 400 }
-      );
+      return Response.json({ code: "MISSING_FIELDS" }, { status: 400 });
     }
 
-    if (!/^\d{11}$/.test(phone) || !phone.startsWith("09")) {
-      return Response.json(
-        { message: "شماره تلفن نامعتبر است" },
-        { status: 400 }
-      );
+    const digits = phone.replace(/\D/g, "");
+    const isIranPhone = /^\d{11}$/.test(digits) && digits.startsWith("09");
+    const isIntlPhone = digits.length >= 10 && digits.length <= 11;
+    if (!isIranPhone && !isIntlPhone) {
+      return Response.json({ code: "INVALID_PHONE" }, { status: 400 });
     }
 
     let visitDate;
@@ -48,10 +45,10 @@ export async function POST(request) {
         visitDate.getMonth() !== month - 1 ||
         visitDate.getDate() !== day
       ) {
-        throw new Error("تاریخ خارج از محدوده");
+        throw new Error("OUT_OF_RANGE");
       }
     } catch {
-      return Response.json({ message: "تاریخ نامعتبر است" }, { status: 400 });
+      return Response.json({ code: "INVALID_DATE" }, { status: 400 });
     }
 
     const newRequest = await createVisitRequest({
@@ -67,17 +64,11 @@ export async function POST(request) {
     });
 
     return Response.json(
-      {
-        message: "درخواست بازدید با موفقیت ثبت شد",
-        requestId: newRequest._id,
-      },
+      { code: "SUCCESS", requestId: newRequest._id },
       { status: 201 }
     );
   } catch (error) {
-    console.error("خطا در ثبت درخواست بازدید:", error);
-    return Response.json(
-      { message: "خطا در سرور. لطفاً مجدد تلاش کنید" },
-      { status: 500 }
-    );
+    console.error("Visit request error:", error);
+    return Response.json({ code: "SERVER_ERROR" }, { status: 500 });
   }
 }

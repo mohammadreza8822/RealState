@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import { yekan } from '@/utils/fonts';
 import NextAuthProvider from '@/provides/NextAuthProvider';
 import Layout from '@/layout/Layout';
+import SetHtmlDir from '@/layout/SetHtmlDir';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -38,6 +39,7 @@ export default async function LocaleLayout({ children, params }) {
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
+      <SetHtmlDir />
       <NextAuthProvider>
         <Layout>{children}</Layout>
       </NextAuthProvider>

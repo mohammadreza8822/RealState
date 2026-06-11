@@ -1,7 +1,7 @@
 {
   "common": {
     "search": "جستجو",
-    "searchPlaceholder": "محله، خیابان، اسم پروژه یا شهر...",
+    "searchPlaceholder": "شهر، محله یا آدرس",
     "allProperties": "همه املاک",
     "apartment": "آپارتمان",
     "villa": "ویلا",
@@ -37,7 +37,27 @@
     "close": "بستن",
     "total": "مجموع",
     "items": "مورد",
-    "viewAd": "مشاهده آگهی"
+    "viewAd": "مشاهده آگهی",
+    "unknown": "نامشخص"
+  },
+  "api": {
+    "INVALID_INPUT": "لطفاً اطلاعات معتبر وارد کنید.",
+    "USER_NOT_FOUND": "لطفاً ابتدا حساب کاربری بسازید.",
+    "WRONG_PASSWORD": "ایمیل یا رمز عبور اشتباه است.",
+    "NOT_LOGGED_IN": "لطفاً وارد حساب کاربری خود شوید.",
+    "PROFILE_NOT_FOUND": "آگهی یافت نشد.",
+    "ACCESS_DENIED": "دسترسی شما محدود شده است.",
+    "PROFILE_DELETED": "آگهی مورد نظر حذف شد.",
+    "PROFILE_PUBLISHED": "آگهی منتشر شد.",
+    "SERVER_ERROR": "مشکلی در سرور رخ داده است. لطفاً دوباره تلاش کنید.",
+    "MISSING_FIELDS": "اطلاعات ضروری ناقص است.",
+    "INVALID_PHONE": "شماره تلفن نامعتبر است.",
+    "INVALID_DATE": "تاریخ نامعتبر است.",
+    "FETCH_USERS_ERROR": "خطا در دریافت اطلاعات کاربران",
+    "INCOMPLETE_DATA": "اطلاعات ناقص است",
+    "CANNOT_CHANGE_SUPERADMIN": "امکان تغییر نقش SUPERADMIN وجود ندارد",
+    "ROLE_UPDATED": "نقش کاربر با موفقیت تغییر کرد",
+    "UPDATE_ROLE_ERROR": "خطا در بروزرسانی نقش کاربر"
   },
   "home": {
     "title": "ملک رویاهات اینجاست!",
@@ -110,7 +130,8 @@
     "terms": "قوانین سایت",
     "copyright": "تمامی حقوق محفوظ است",
     "madeWith": "ساخته شده با",
-    "inIran": "در ایران"
+    "inIran": "در ایران",
+    "designedBy": "طراحی توسط"
   },
   "services": {
     "buy": "خرید",
@@ -391,18 +412,31 @@
     "greeting": "سلام 👋",
     "description": "آگهی های خود را ثبت کنید تا هزاران نفر آن را مشاهده کنند.",
     "membershipDate": "تاریخ عضویت:",
+    "memberSince": "عضو از",
+    "quickActions": "دسترسی سریع",
+    "manageListings": "آگهی‌های من",
+    "manageListingsDesc": "مشاهده، ویرایش و حذف آگهی‌های ملک",
+    "addListing": "ثبت آگهی جدید",
+    "addListingDesc": "یک آگهی ملک جدید منتشر کنید",
+    "viewSite": "مشاهده املاک",
+    "viewSiteDesc": "مرور همه آگهی‌های موجود",
     "error": "مشکلی پیش آمده است",
     "errorRetry": "مشکلی پیش آمده است لطفا دوباره امتحان کنید"
   },
   "sidebar": {
     "admin": "ادمین",
-    "userAccount": "حساب کاربری",
+    "superAdmin": "مدیر کل",
+    "user": "کاربر",
+    "userAccount": "خلاصه حساب",
     "myAds": "آگهی های من",
     "addAd": "ثبت آگهی",
-    "manageAdmins": "مدیریت ادمین‌ها",
+    "manageAdmins": "درخواست مشاوران",
     "pendingApproval": "در انتظار تایید",
     "contactMessages": "پیام‌های تماس",
-    "visitRequests": "درخواست‌های بازدید"
+    "visitRequests": "درخواست‌های بازدید",
+    "accountSection": "حساب کاربری",
+    "adminSection": "مدیریت",
+    "menu": "منو"
   },
   "addProfile": {
     "title": "ثبت آگهی",
@@ -456,6 +490,94 @@
     "successConsultant": "ثبت‌نام شد! درخواست مشاور شدن شما در انتظار تأیید مدیر است",
     "success": "ثبت‌نام با موفقیت انجام شد! حالا وارد شوید",
     "error": "خطایی رخ داد"
+  },
+  "dashboardCard": {
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "view": "مشاهده",
+    "confirmDelete": "آیا از حذف این آگهی مطمئن هستید؟"
+  },
+  "myProfiles": {
+    "title": "آگهی‌های من",
+    "subtitle": "مدیریت آگهی‌های ثبت‌شده",
+    "addNew": "ثبت آگهی جدید",
+    "empty": "هیچ آگهی ثبت نشده است"
+  },
+  "adminPage": {
+    "empty": "هیچ آگهی در انتظار تاییدی وجود ندارد"
+  },
+  "adminCard": {
+    "publish": "انتشار",
+    "viewDetails": "مشاهده جزئیات"
+  },
+  "itemList": {
+    "empty": "هیچ موردی ذکر نشده است"
+  },
+  "share": {
+    "label": "اشتراک گذاری"
+  },
+  "textList": {
+    "delete": "حذف",
+    "add": "افزودن"
+  },
+  "radioList": {
+    "category": "دسته بندی"
+  },
+  "customDatePicker": {
+    "constructionDate": "تاریخ ساخت"
+  },
+  "usersTable": {
+    "email": "ایمیل",
+    "role": "نقش فعلی",
+    "joinedAt": "تاریخ عضویت",
+    "actions": "عملیات",
+    "revokeAdmin": "حذف دسترسی ادمین",
+    "grantAdmin": "اعطای دسترسی ادمین",
+    "loginAs": "ورود به عنوان کاربر",
+    "loggingIn": "در حال ورود به حساب کاربری...",
+    "loginError": "خطا در ورود به حساب کاربری"
+  },
+  "visitRequestModal": {
+    "noScheduleTitle": "زمان بازدید تعیین نشده",
+    "noScheduleDesc": "مشاور هنوز روز و ساعتی برای بازدید این ملک تعیین نکرده است.",
+    "close": "بستن",
+    "title": "درخواست بازدید حضوری",
+    "subtitle": "رایگان و بدون واسطه",
+    "namePlaceholder": "نام و نام خانوادگی *",
+    "phonePlaceholder": "شماره تماس (۰۹۱۲۳۴۵۶۷۸۹) *",
+    "emailPlaceholder": "ایمیل (اختیاری)",
+    "visitDate": "تاریخ بازدید *",
+    "dateHint": "فقط روزهای سبز قابل انتخاب هستند",
+    "visitTime": "ساعت بازدید *",
+    "selectTimeSlot": "یک بازه زمانی انتخاب کنید",
+    "noTimeForDate": "برای این تاریخ ساعتی تعیین نشده است",
+    "submit": "ارسال درخواست بازدید",
+    "submitting": "در حال ارسال...",
+    "fillRequired": "لطفاً همه فیلدهای الزامی را پر کنید",
+    "invalidPhone": "شماره تلفن باید ۱۱ رقمی و با ۰۹ شروع شود",
+    "success": "درخواست بازدید با موفقیت ثبت شد! مشاور ظرف ۲۴ ساعت تماس می‌گیرد",
+    "submitError": "خطا در ارسال درخواست",
+    "networkError": "خطای شبکه. لطفاً دوباره تلاش کنید"
+  },
+  "visitScheduler": {
+    "title": "تنظیم زمان بازدید",
+    "datePlaceholder": "تاریخ را انتخاب کنید",
+    "availableHours": "ساعت‌های موجود:",
+    "addTime": "افزودن زمان",
+    "adding": "در حال افزودن...",
+    "scheduledTimes": "زمان‌های تنظیم‌شده:",
+    "delete": "حذف",
+    "confirmDelete": "این زمان حذف شود؟",
+    "selectDateAndTime": "تاریخ و حداقل یک ساعت انتخاب کنید",
+    "addSuccess": "زمان با موفقیت اضافه شد",
+    "saveError": "خطا در ذخیره",
+    "networkError": "خطای شبکه",
+    "timeSlots": {
+      "morning": "۹ تا ۱۲ صبح",
+      "midday": "۱۲ تا ۳ بعدازظهر",
+      "afternoon": "۳ تا ۶ عصر",
+      "evening": "۶ تا ۸ شب"
+    }
   }
 }
 

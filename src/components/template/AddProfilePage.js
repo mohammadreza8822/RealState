@@ -134,8 +134,8 @@ function AddProfilePage({ data }) {
   };
 
   return (
-    <div className="flex flex-col mb-40 animate-fadeIn">
-      <h3 className="text-2xl text-primary bg-primary/10 rounded-xl px-4 py-3 mb-10">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 md:p-8 mb-10 animate-fadeIn">
+      <h3 className="text-2xl font-bold text-gray-900 mb-8">
         {data ? t("addProfile.editTitle") : t("addProfile.title")}
       </h3>
       {/* ===== بخش آپلود عکس ===== */}

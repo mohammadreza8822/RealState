@@ -72,7 +72,7 @@ function Card({ data }) {
 
         {/* مکان */}
         <p className="flex items-center text-sm text-gray-600">
-          <HiOutlineLocationMarker className="ml-2 text-lg text-[#304ffe]" />
+          <HiOutlineLocationMarker className={`${locale === 'fa' || locale === 'ar' ? 'ml-2' : 'mr-2'} text-lg text-[#304ffe] shrink-0`} />
           <span className="truncate font-medium">{location}</span>
         </p>
 

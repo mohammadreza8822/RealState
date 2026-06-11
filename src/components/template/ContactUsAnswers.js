@@ -57,7 +57,7 @@ export default async function ContactUsAnswers() {
             </p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-right border-collapse">
+              <table className={`w-full ${isRTL ? "text-right" : "text-left"} border-collapse`}>
                 <thead>
                   <tr className="bg-blue-600 text-white">
                     <th className="p-4 rounded-tr-xl">{t("contactUsAnswers.date")}</th>

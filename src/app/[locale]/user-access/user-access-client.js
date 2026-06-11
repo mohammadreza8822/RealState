@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import UsersTable from "@/module/UsersTable";
 import styles from "./UserAccess.module.css";
 import Loader from "@/module/Loader";
+import { translateApiCode } from "@/utils/apiMessages";
 
 export default function UserAccessPage() {
   const t = useTranslations();
@@ -30,7 +31,7 @@ export default function UserAccessPage() {
       const res = await fetch("/api/user-access");
       const data = await res.json();
       if (data.error) {
-        toast.error(data.error);
+        toast.error(translateApiCode(t, data.error));
       } else {
         setUsers(data.data);
       }
@@ -51,9 +52,9 @@ export default function UserAccessPage() {
       const data = await res.json();
 
       if (data.error) {
-        toast.error(data.error);
+        toast.error(translateApiCode(t, data.error));
       } else {
-        toast.success(data.message);
+        toast.success(translateApiCode(t, data.message));
         fetchUsers(); // بروزرسانی لیست کاربران
       }
     } catch (err) {

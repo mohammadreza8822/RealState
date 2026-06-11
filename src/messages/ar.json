@@ -1,7 +1,7 @@
 {
   "common": {
     "search": "بحث",
-    "searchPlaceholder": "الحي، الشارع، اسم المشروع أو المدينة...",
+    "searchPlaceholder": "المدينة، الحي أو العنوان",
     "allProperties": "جميع العقارات",
     "apartment": "شقة",
     "villa": "فيلا",
@@ -37,7 +37,8 @@
     "close": "إغلاق",
     "total": "المجموع",
     "items": "عنصر",
-    "viewAd": "عرض الإعلان"
+    "viewAd": "عرض الإعلان",
+    "unknown": "غير معروف"
   },
   "home": {
     "title": "عقار أحلامك هنا!",
@@ -110,7 +111,8 @@
     "terms": "الشروط والأحكام",
     "copyright": "جميع الحقوق محفوظة",
     "madeWith": "صنع بـ",
-    "inIran": "في إيران"
+    "inIran": "في إيران",
+    "designedBy": "تصميم بواسطة"
   },
   "services": {
     "buy": "شراء",
@@ -248,8 +250,11 @@
   "favorites": {
     "title": "مفضلاتي",
     "pleaseLogin": "يرجى تسجيل الدخول",
+    "loginRequired": "يرجى تسجيل الدخول",
     "loginToSee": "تحتاج إلى تسجيل الدخول لرؤية مفضلاتك",
-    "noFavorites": "لم تقم بحفظ أي إعلانات بعد"
+    "loginMessage": "تحتاج إلى تسجيل الدخول لرؤية مفضلاتك",
+    "noFavorites": "لم تقم بحفظ أي إعلانات بعد",
+    "empty": "لم تقم بحفظ أي إعلانات بعد"
   },
   "details": {
     "notFound": "لم يتم العثور على الإعلان!",
@@ -391,18 +396,31 @@
     "greeting": "مرحبا 👋",
     "description": "سجل إعلاناتك حتى يتمكن آلاف الأشخاص من رؤيتها.",
     "membershipDate": "تاريخ العضوية:",
+    "memberSince": "عضو منذ",
+    "quickActions": "إجراءات سريعة",
+    "manageListings": "إعلاناتي",
+    "manageListingsDesc": "عرض وتعديل وحذف إعلاناتك",
+    "addListing": "إضافة إعلان جديد",
+    "addListingDesc": "نشر إعلان عقاري جديد",
+    "viewSite": "تصفح العقارات",
+    "viewSiteDesc": "استكشف جميع الإعلانات المتاحة",
     "error": "حدث خطأ ما",
     "errorRetry": "حدث خطأ ما، يرجى المحاولة مرة أخرى"
   },
   "sidebar": {
     "admin": "مدير",
-    "userAccount": "حساب المستخدم",
+    "superAdmin": "مدير عام",
+    "user": "مستخدم",
+    "userAccount": "نظرة عامة",
     "myAds": "إعلاناتي",
     "addAd": "إضافة إعلان",
-    "manageAdmins": "إدارة المديرين",
+    "manageAdmins": "طلبات المستشارين",
     "pendingApproval": "في انتظار الموافقة",
     "contactMessages": "رسائل الاتصال",
-    "visitRequests": "طلبات الزيارة"
+    "visitRequests": "طلبات الزيارة",
+    "accountSection": "الحساب",
+    "adminSection": "الإدارة",
+    "menu": "القائمة"
   },
   "addProfile": {
     "title": "إضافة إعلان",
@@ -456,6 +474,113 @@
     "successConsultant": "تم التسجيل بنجاح! طلب المستشار الخاص بك في انتظار موافقة المدير",
     "success": "تم التسجيل بنجاح! يرجى تسجيل الدخول الآن",
     "error": "حدث خطأ"
+  },
+  "dashboardCard": {
+    "edit": "تعديل",
+    "delete": "حذف",
+    "view": "عرض",
+    "confirmDelete": "هل أنت متأكد من حذف هذا الإعلان؟"
+  },
+  "myProfiles": {
+    "title": "إعلاناتي",
+    "subtitle": "إدارة إعلاناتك المسجلة",
+    "addNew": "إضافة إعلان جديد",
+    "empty": "لم يتم تسجيل أي إعلانات بعد"
+  },
+  "adminPage": {
+    "empty": "لا توجد إعلانات في انتظار الموافقة"
+  },
+  "adminCard": {
+    "publish": "نشر",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "itemList": {
+    "empty": "لا توجد عناصر"
+  },
+  "share": {
+    "label": "مشاركة"
+  },
+  "textList": {
+    "delete": "حذف",
+    "add": "إضافة"
+  },
+  "radioList": {
+    "category": "الفئة"
+  },
+  "customDatePicker": {
+    "constructionDate": "تاريخ البناء"
+  },
+  "usersTable": {
+    "email": "البريد الإلكتروني",
+    "role": "الدور الحالي",
+    "joinedAt": "تاريخ الانضمام",
+    "actions": "الإجراءات",
+    "revokeAdmin": "إلغاء صلاحية المدير",
+    "grantAdmin": "منح صلاحية المدير",
+    "loginAs": "تسجيل الدخول كمستخدم",
+    "loggingIn": "جاري تسجيل الدخول...",
+    "loginError": "فشل تسجيل الدخول كمستخدم"
+  },
+  "visitRequestModal": {
+    "noScheduleTitle": "لا توجد أوقات زيارة محددة",
+    "noScheduleDesc": "لم يحدد الوكيل أي أيام أو أوقات زيارة لهذا العقار بعد.",
+    "close": "إغلاق",
+    "title": "طلب زيارة شخصية",
+    "subtitle": "مجاني · بدون وسيط",
+    "namePlaceholder": "الاسم الكامل *",
+    "phonePlaceholder": "رقم الهاتف *",
+    "emailPlaceholder": "البريد الإلكتروني (اختياري)",
+    "visitDate": "تاريخ الزيارة *",
+    "dateHint": "التواريخ المميزة فقط متاحة",
+    "visitTime": "وقت الزيارة *",
+    "selectTimeSlot": "اختر فترة زمنية",
+    "noTimeForDate": "لا توجد فترات متاحة لهذا التاريخ",
+    "submit": "إرسال طلب الزيارة",
+    "submitting": "جاري الإرسال...",
+    "fillRequired": "يرجى ملء جميع الحقول المطلوبة",
+    "invalidPhone": "يرجى إدخال رقم هاتف صالح",
+    "success": "تم إرسال طلب الزيارة! سيتواصل معك وكيل خلال 24 ساعة.",
+    "submitError": "فشل إرسال الطلب",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى."
+  },
+  "visitScheduler": {
+    "title": "تحديد جدول الزيارة",
+    "datePlaceholder": "اختر تاريخاً",
+    "availableHours": "الساعات المتاحة:",
+    "addTime": "إضافة فترة",
+    "adding": "جاري الإضافة...",
+    "scheduledTimes": "الأوقات المجدولة:",
+    "delete": "إزالة",
+    "confirmDelete": "إزالة هذه الفترة؟",
+    "selectDateAndTime": "اختر تاريخاً وفترة واحدة على الأقل",
+    "addSuccess": "تمت إضافة الفترة بنجاح",
+    "saveError": "فشل الحفظ",
+    "networkError": "خطأ في الشبكة",
+    "timeSlots": {
+      "morning": "9 ص – 12 م",
+      "midday": "12 م – 3 م",
+      "afternoon": "3 م – 6 م",
+      "evening": "6 م – 8 م"
+    }
+  },
+  "api": {
+    "INVALID_INPUT": "يرجى إدخال بيانات صالحة.",
+    "USER_NOT_FOUND": "الحساب غير موجود. يرجى التسجيل أولاً.",
+    "WRONG_PASSWORD": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "NOT_LOGGED_IN": "يرجى تسجيل الدخول إلى حسابك.",
+    "PROFILE_NOT_FOUND": "الإعلان غير موجود.",
+    "ACCESS_DENIED": "ليس لديك صلاحية لهذا الإجراء.",
+    "PROFILE_DELETED": "تم حذف الإعلان بنجاح.",
+    "PROFILE_PUBLISHED": "تم نشر الإعلان بنجاح.",
+    "SERVER_ERROR": "حدث خطأ في الخادم. يرجى المحاولة مرة أخرى.",
+    "MISSING_FIELDS": "المعلومات المطلوبة ناقصة.",
+    "INVALID_PHONE": "رقم الهاتف غير صالح.",
+    "INVALID_DATE": "التاريخ غير صالح.",
+    "FETCH_USERS_ERROR": "فشل تحميل المستخدمين.",
+    "INCOMPLETE_DATA": "المعلومات غير مكتملة.",
+    "CANNOT_CHANGE_SUPERADMIN": "لا يمكن تغيير دور SUPERADMIN.",
+    "ROLE_UPDATED": "تم تحديث دور المستخدم بنجاح.",
+    "UPDATE_ROLE_ERROR": "فشل تحديث دور المستخدم."
   }
 }
 

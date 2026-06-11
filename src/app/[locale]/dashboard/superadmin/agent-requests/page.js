@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { isRTLLocale } from "@/utils/locale";
 
 export default function AgentRequestsPage() {
   const t = useTranslations();
   const locale = useLocale();
+  const isRTL = isRTLLocale(locale);
   const [pending, setPending] = useState([]);
   const [approved, setApproved] = useState([]);
   const [rejected, setRejected] = useState([]);
@@ -94,7 +96,7 @@ export default function AgentRequestsPage() {
                   key={user._id}
                   className="bg-white rounded-3xl shadow-xl p-8 flex flex-col md:flex-row justify-between items-center gap-8 border border-amber-100"
                 >
-                  <div className="text-center md:text-right">
+                  <div className={`text-center ${isRTL ? "md:text-right" : "md:text-left"}`}>
                     <p className="text-2xl font-bold text-gray-800">
                       {user.email}
                     </p>

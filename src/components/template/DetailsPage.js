@@ -119,7 +119,7 @@ export default function DetailsPage({
               {/* توضیحات */}
               <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                 <Title title={t("detailsPage.fullDescription")} />
-                <p className="text-gray-700 leading-8 text-justify whitespace-pre-line">
+                <p className="text-gray-700 leading-8 text-start whitespace-pre-line">
                   {description}
                 </p>
               </div>

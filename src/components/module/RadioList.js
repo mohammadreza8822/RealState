@@ -1,4 +1,9 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 function RadioList({ profileData, setProfileData }) {
+  const t = useTranslations();
   const { category } = profileData;
 
   const changeHandler = (e) => {
@@ -7,15 +12,15 @@ function RadioList({ profileData, setProfileData }) {
   };
 
   const radioItems = [
-    { id: "villa", label: "ویلا" },
-    { id: "apartment", label: "آپارتمان" },
-    { id: "store", label: "مغازه" },
-    { id: "office", label: "دفتر" },
+    { id: "villa", label: t("common.villa") },
+    { id: "apartment", label: t("common.apartment") },
+    { id: "store", label: t("common.store") },
+    { id: "office", label: t("common.office") },
   ];
 
   return (
     <div className="mb-10">
-      <p className="text-lg mb-2">دسته بندی</p>
+      <p className="text-lg mb-2">{t("radioList.category")}</p>
       <div className="flex flex-wrap gap-4">
         {radioItems.map((item) => (
           <div
@@ -37,14 +42,6 @@ function RadioList({ profileData, setProfileData }) {
           </div>
         ))}
       </div>
-      <input
-        type="radio"
-        name="category"
-        value="office"
-        id="office"
-        checked={category === "office"}
-        onChange={changeHandler}
-      />
     </div>
   );
 }

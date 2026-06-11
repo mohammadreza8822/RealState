@@ -1,30 +1,18 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
+import { getPublishedProfiles } from "@/lib/repository";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function BuyResidential({ searchParams }) {
   const t = await getTranslations();
-  const category = searchParams?.category || null;
+  const params = await searchParams;
+  const category = params?.category || null;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/api/profile`,
-      {
-        cache: "no-store",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    let finalData = await getPublishedProfiles();
 
-    if (!res.ok) {
-      throw new Error(t("buyResidential.serverError"));
-    }
-
-    const { data } = await res.json();
-
-    if (!data || !Array.isArray(data)) {
+    if (!finalData || !Array.isArray(finalData)) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
           <div className="text-center">
@@ -37,10 +25,6 @@ export default async function BuyResidential({ searchParams }) {
       );
     }
 
-    // فقط آگهی‌های منتشر شده
-    let finalData = data.filter((item) => item.published === true);
-
-    // فیلتر بر اساس دسته‌بندی
     if (category && category !== "all") {
       finalData = finalData.filter((item) => item.category === category);
     }
@@ -71,11 +55,10 @@ export default async function BuyResidential({ searchParams }) {
   }
 }
 
-// اختیاری: متادیتا برای سئو
 export async function generateMetadata() {
   const t = await getTranslations();
   return {
     title: `${t("buyResidential.title")} | ${t("metadata.title")}`,
     description: t("metadata.description"),
-};
+  };
 }

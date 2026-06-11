@@ -5,11 +5,15 @@ import { Link } from "@/i18n/routing";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { isRTLLocale } from "@/utils/locale";
+import { translateApiCode } from "@/utils/apiMessages";
 import Loader from "@/module/Loader";
 
 function SignInPage() {
   const t = useTranslations();
+  const locale = useLocale();
+  const isRTL = isRTLLocale(locale);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,7 +32,7 @@ function SignInPage() {
 
     setLoading(false);
     if (res.error) {
-      toast.error(res.error);
+      toast.error(translateApiCode(t, res.error));
     } else {
       router.push("/");
     }
@@ -70,7 +74,7 @@ function SignInPage() {
         {t("signin.noAccount")}{" "}
         <Link
           href="/signup"
-          className="text-[#304ffe] mr-2.5 border-b-[3px] border-gray-500"
+          className={`text-[#304ffe] ${isRTL ? "mr-2.5" : "ml-2.5"} border-b-[3px] border-gray-500`}
         >
           {t("signin.signup")}
         </Link>

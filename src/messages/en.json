@@ -1,7 +1,7 @@
 {
   "common": {
     "search": "Search",
-    "searchPlaceholder": "Neighborhood, street, project name or city...",
+    "searchPlaceholder": "City, neighborhood or address",
     "allProperties": "All Properties",
     "apartment": "Apartment",
     "villa": "Villa",
@@ -37,7 +37,27 @@
     "close": "Close",
     "total": "Total",
     "items": "items",
-    "viewAd": "View Ad"
+    "viewAd": "View Ad",
+    "unknown": "Unknown"
+  },
+  "api": {
+    "INVALID_INPUT": "Please enter valid credentials.",
+    "USER_NOT_FOUND": "Account not found. Please sign up first.",
+    "WRONG_PASSWORD": "Incorrect email or password.",
+    "NOT_LOGGED_IN": "Please sign in to your account.",
+    "PROFILE_NOT_FOUND": "Listing not found.",
+    "ACCESS_DENIED": "You do not have access to this action.",
+    "PROFILE_DELETED": "Listing deleted successfully.",
+    "PROFILE_PUBLISHED": "Listing published successfully.",
+    "SERVER_ERROR": "A server error occurred. Please try again.",
+    "MISSING_FIELDS": "Required information is missing.",
+    "INVALID_PHONE": "Invalid phone number.",
+    "INVALID_DATE": "Invalid date.",
+    "FETCH_USERS_ERROR": "Failed to load users.",
+    "INCOMPLETE_DATA": "Incomplete information.",
+    "CANNOT_CHANGE_SUPERADMIN": "Cannot change SUPERADMIN role.",
+    "ROLE_UPDATED": "User role updated successfully.",
+    "UPDATE_ROLE_ERROR": "Failed to update user role."
   },
   "home": {
     "title": "Your Dream Property is Here!",
@@ -100,7 +120,7 @@
   },
   "footer": {
     "siteName": "Real Estate System",
-    "description": "Smart platform for buying, selling and renting property with Iran's best consultants",
+    "description": "Smart platform for buying, selling and renting property across North America",
     "quickLinks": "Quick Links",
     "home": "Home",
     "buyAds": "Buy Ads",
@@ -110,7 +130,8 @@
     "terms": "Terms & Conditions",
     "copyright": "All rights reserved",
     "madeWith": "Made with",
-    "inIran": "in Iran"
+    "inIran": "in North America",
+    "designedBy": "Designed by"
   },
   "services": {
     "buy": "Buy",
@@ -174,11 +195,11 @@
     "title": "Contact Real Estate Consultant System",
     "contactMethods": "Contact Methods",
     "headOffice": "Head Office:",
-    "headOfficeAddress": "Tehran, Saadat Abad, Kaj Square, Rose Commercial Complex, 4th Floor, Unit 401",
+    "headOfficeAddress": "Toronto, ON — 100 King Street West, Suite 5600",
     "phoneNumbers": "Contact Numbers:",
-    "landline": "Landline: 021-22345678",
-    "mobile": "Mobile: 0912-345-6789",
-    "whatsapp": "WhatsApp: 0912-345-6789",
+    "landline": "Phone: +1 (416) 555-0100",
+    "mobile": "Mobile: +1 (647) 555-0199",
+    "whatsapp": "WhatsApp: +1 (647) 555-0199",
     "email": "Email:",
     "supportEmail": "Support: support@realestate.ir",
     "infoEmail": "Info: info@realestate.ir",
@@ -248,8 +269,11 @@
   "favorites": {
     "title": "My Favorites",
     "pleaseLogin": "Please Login",
+    "loginRequired": "Please Login",
     "loginToSee": "You need to login to see your favorites",
-    "noFavorites": "You haven't saved any ads yet"
+    "loginMessage": "You need to login to see your favorites",
+    "noFavorites": "You haven't saved any ads yet",
+    "empty": "You haven't saved any ads yet"
   },
   "details": {
     "notFound": "Ad not found!",
@@ -322,8 +346,8 @@
     "fromArea": "Area From",
     "toArea": "Area To",
     "clearAll": "Clear All",
-    "fromPricePlaceholder": "500 Million",
-    "toPricePlaceholder": "10 Billion",
+    "fromPricePlaceholder": "500000",
+    "toPricePlaceholder": "2000000",
     "fromAreaPlaceholder": "80",
     "toAreaPlaceholder": "300"
   },
@@ -391,18 +415,31 @@
     "greeting": "Hello 👋",
     "description": "Register your ads so thousands of people can see them.",
     "membershipDate": "Membership Date:",
+    "memberSince": "Member since",
+    "quickActions": "Quick Actions",
+    "manageListings": "My Listings",
+    "manageListingsDesc": "View, edit and delete your property ads",
+    "addListing": "Add New Ad",
+    "addListingDesc": "Post a new property listing",
+    "viewSite": "Browse Properties",
+    "viewSiteDesc": "Explore all available listings",
     "error": "Something went wrong",
     "errorRetry": "Something went wrong, please try again"
   },
   "sidebar": {
     "admin": "Admin",
-    "userAccount": "User Account",
+    "superAdmin": "Super Admin",
+    "user": "User",
+    "userAccount": "Overview",
     "myAds": "My Ads",
     "addAd": "Add Ad",
-    "manageAdmins": "Manage Admins",
+    "manageAdmins": "Agent Requests",
     "pendingApproval": "Pending Approval",
     "contactMessages": "Contact Messages",
-    "visitRequests": "Visit Requests"
+    "visitRequests": "Visit Requests",
+    "accountSection": "Account",
+    "adminSection": "Administration",
+    "menu": "Menu"
   },
   "addProfile": {
     "title": "Add Ad",
@@ -456,6 +493,94 @@
     "successConsultant": "Registration successful! Your consultant request is pending admin approval",
     "success": "Registration successful! Please sign in now",
     "error": "An error occurred"
+  },
+  "dashboardCard": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "confirmDelete": "Are you sure you want to delete this listing?"
+  },
+  "myProfiles": {
+    "title": "My Listings",
+    "subtitle": "Manage your published property ads",
+    "addNew": "Add New Ad",
+    "empty": "No listings registered yet"
+  },
+  "adminPage": {
+    "empty": "No listings pending approval"
+  },
+  "adminCard": {
+    "publish": "Publish",
+    "viewDetails": "View Details"
+  },
+  "itemList": {
+    "empty": "No items listed"
+  },
+  "share": {
+    "label": "Share"
+  },
+  "textList": {
+    "delete": "Delete",
+    "add": "Add"
+  },
+  "radioList": {
+    "category": "Category"
+  },
+  "customDatePicker": {
+    "constructionDate": "Construction Date"
+  },
+  "usersTable": {
+    "email": "Email",
+    "role": "Current Role",
+    "joinedAt": "Joined",
+    "actions": "Actions",
+    "revokeAdmin": "Revoke Admin",
+    "grantAdmin": "Grant Admin",
+    "loginAs": "Login as User",
+    "loggingIn": "Signing in...",
+    "loginError": "Failed to sign in as user"
+  },
+  "visitRequestModal": {
+    "noScheduleTitle": "No visit times scheduled",
+    "noScheduleDesc": "The agent has not set any visit days or times for this property yet.",
+    "close": "Close",
+    "title": "Request In-Person Visit",
+    "subtitle": "Free · No middleman",
+    "namePlaceholder": "Full name *",
+    "phonePlaceholder": "Phone number *",
+    "emailPlaceholder": "Email (optional)",
+    "visitDate": "Visit date *",
+    "dateHint": "Only highlighted dates are available",
+    "visitTime": "Visit time *",
+    "selectTimeSlot": "Select a time slot",
+    "noTimeForDate": "No time slots available for this date",
+    "submit": "Submit visit request",
+    "submitting": "Submitting...",
+    "fillRequired": "Please fill in all required fields",
+    "invalidPhone": "Please enter a valid phone number",
+    "success": "Visit request submitted! An agent will contact you within 24 hours.",
+    "submitError": "Failed to submit request",
+    "networkError": "Network error. Please try again."
+  },
+  "visitScheduler": {
+    "title": "Set visit schedule",
+    "datePlaceholder": "Select a date",
+    "availableHours": "Available hours:",
+    "addTime": "Add time slot",
+    "adding": "Adding...",
+    "scheduledTimes": "Scheduled times:",
+    "delete": "Remove",
+    "confirmDelete": "Remove this time slot?",
+    "selectDateAndTime": "Select a date and at least one time slot",
+    "addSuccess": "Time slot added successfully",
+    "saveError": "Failed to save",
+    "networkError": "Network error",
+    "timeSlots": {
+      "morning": "9 AM – 12 PM",
+      "midday": "12 PM – 3 PM",
+      "afternoon": "3 PM – 6 PM",
+      "evening": "6 PM – 8 PM"
+    }
   }
 }
 

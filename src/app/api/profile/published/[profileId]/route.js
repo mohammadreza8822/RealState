@@ -13,34 +13,28 @@ export async function PATCH(req, context) {
 
     const session = await getServerSession(req);
     if (!session) {
-      return NextResponse.json(
-        { error: "لطفا وارد حساب کاربری خود شوید" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "NOT_LOGGED_IN" }, { status: 401 });
     }
 
     const user = await findUserByEmail(session.user.email);
     if (!user) {
-      return NextResponse.json({ error: "حساب کاربری یافت نشد" }, { status: 404 });
+      return NextResponse.json({ error: "USER_NOT_FOUND" }, { status: 404 });
     }
     if (user.role !== "ADMIN") {
-      return NextResponse.json({ error: "دسترسی محدود" }, { status: 403 });
+      return NextResponse.json({ error: "ACCESS_DENIED" }, { status: 403 });
     }
 
     const profile = await getProfileById(id);
     if (!profile) {
-      return NextResponse.json({ error: "آگهی یافت نشد" }, { status: 404 });
+      return NextResponse.json({ error: "PROFILE_NOT_FOUND" }, { status: 404 });
     }
 
     await publishProfile(id);
 
-    return NextResponse.json({ message: "آگهی منتشر شد" }, { status: 200 });
+    return NextResponse.json({ message: "PROFILE_PUBLISHED" }, { status: 200 });
   } catch (err) {
     console.log(err);
-    return NextResponse.json(
-      { error: "مشکلی در سرور رخ داده است" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "SERVER_ERROR" }, { status: 500 });
   }
 }
 
@@ -50,31 +44,19 @@ export async function DELETE(req, context) {
 
     const session = await getServerSession(req);
     if (!session) {
-      return NextResponse.json(
-        { error: "لطفا وارد حساب کاربری خود شوید." },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "NOT_LOGGED_IN" }, { status: 401 });
     }
 
     const user = await findUserByEmail(session.user.email);
     if (!user) {
-      return NextResponse.json(
-        { error: "حساب کاربری شما یافت نشد!" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "USER_NOT_FOUND" }, { status: 404 });
     }
 
     await deleteProfile(id);
 
-    return NextResponse.json(
-      { message: "آگهی مورد نظر حذف شد" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "PROFILE_DELETED" }, { status: 200 });
   } catch (err) {
     console.log(err);
-    return NextResponse.json(
-      { error: "مشکلی در سرور رخ داده است" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "SERVER_ERROR" }, { status: 500 });
   }
 }

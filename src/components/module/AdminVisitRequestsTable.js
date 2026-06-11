@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import PersianDate from "@/module/PersianDate";
 import toast from "react-hot-toast";
+import { isRTLLocale } from "@/utils/locale";
+import { formatTimeSlot } from "@/constants/timeSlots";
 
 // تابع‌های کمکی برای وضعیت - کاملاً آبی!
 const getStatusText = (status, t) => {
@@ -32,6 +34,8 @@ const getStatusColor = (status) => {
 export default function AdminVisitRequestsTable({ initialRequests }) {
   const t = useTranslations();
   const locale = useLocale();
+  const isRTL = isRTLLocale(locale);
+  const textAlign = isRTL ? "text-right" : "text-left";
   const [requests, setRequests] = useState(initialRequests);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -82,24 +86,24 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
-          dir={locale === 'fa' || locale === 'ar' ? 'rtl' : 'ltr'}
+          dir={isRTL ? "rtl" : "ltr"}
           placeholder={t("visitRequests.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className={`w-full px-5 py-4 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition bg-white shadow-sm`}
+          className={`w-full px-5 py-4 ${textAlign} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition bg-white shadow-sm`}
         />
         <select
-          dir={locale === 'fa' || locale === 'ar' ? 'rtl' : 'ltr'}
+          dir={isRTL ? "rtl" : "ltr"}
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className={`w-full px-5 py-4 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none bg-white shadow-sm`}
+          className={`w-full px-5 py-4 ${textAlign} border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition bg-white shadow-sm`}
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
-            backgroundPosition: locale === 'fa' || locale === 'ar' ? "left 1rem center" : "right 1rem center",
+            backgroundPosition: isRTL ? "left 1rem center" : "right 1rem center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "16px",
-            paddingLeft: locale === 'fa' || locale === 'ar' ? "3rem" : "1rem",
-            paddingRight: locale === 'fa' || locale === 'ar' ? "1rem" : "3rem",
+            paddingLeft: isRTL ? "3rem" : "1rem",
+            paddingRight: isRTL ? "1rem" : "3rem",
           }}
         >
           <option value="all">{t("visitRequests.allStatuses")}</option>
@@ -115,19 +119,19 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
           {/* هدر با گرادیان آبی فوق‌العاده */}
           <thead className="bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 text-white shadow-lg">
             <tr>
-              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+              <th className={`px-6 py-5 ${textAlign} text-sm md:text-base font-semibold`}>
                 {t("visitRequests.ad")}
               </th>
-              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+              <th className={`px-6 py-5 ${textAlign} text-sm md:text-base font-semibold`}>
                 {t("visitRequests.requester")}
               </th>
-              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+              <th className={`px-6 py-5 ${textAlign} text-sm md:text-base font-semibold`}>
                 {t("visitRequests.dateTime")}
               </th>
-              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+              <th className={`px-6 py-5 ${textAlign} text-sm md:text-base font-semibold`}>
                 {t("visitRequests.status")}
               </th>
-              <th className={`px-6 py-5 ${locale === 'fa' || locale === 'ar' ? 'text-right' : 'text-left'} text-sm md:text-base font-semibold`}>
+              <th className={`px-6 py-5 ${textAlign} text-sm md:text-base font-semibold`}>
                 {t("visitRequests.actions")}
               </th>
             </tr>
@@ -156,7 +160,7 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                         alt=""
                         className="w-16 h-16 rounded-xl object-cover shadow-lg ring-2 ring-blue-100"
                       />
-                      <div className="text-right">
+                      <div className={textAlign}>
                         <p className="font-bold text-gray-900">
                           {req.listingTitle}
                         </p>
@@ -179,7 +183,9 @@ export default function AdminVisitRequestsTable({ initialRequests }) {
                       <PersianDate date={req.preferredDate} />
                     </p>
                     <p className="text-cyan-600 text-sm font-medium mt-1">
-                      {req.preferredTime || t("visitRequests.unknown")}
+                      {req.preferredTime
+                        ? formatTimeSlot(req.preferredTime, t)
+                        : t("visitRequests.unknown")}
                     </p>
                   </td>
 

@@ -24,14 +24,13 @@ export const authOptions = {
       async authorize(credentials) {
         const { email, password } = credentials;
 
-        if (!email || !password)
-          throw new Error("لطفا اطلاعات معتبر وارد کنید.");
+        if (!email || !password) throw new Error("INVALID_INPUT");
 
         const user = await findUserByEmail(email);
-        if (!user) throw new Error("لطفا ابتدا حساب کاربری درست کنید");
+        if (!user) throw new Error("USER_NOT_FOUND");
 
         const isValid = verifyPassword(password, user.password);
-        if (!isValid) throw new Error("ایمیل یا رمز عبور اشتباه است.");
+        if (!isValid) throw new Error("WRONG_PASSWORD");
 
         return { email, role: user.role };
       },

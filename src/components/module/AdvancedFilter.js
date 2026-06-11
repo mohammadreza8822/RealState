@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { HiX } from "react-icons/hi";
+import { isRTLLocale } from "@/utils/locale";
 
 export default function AdvancedFilter() {
   const t = useTranslations();
+  const locale = useLocale();
+  const isRTL = isRTLLocale(locale);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -86,7 +89,7 @@ export default function AdvancedFilter() {
       {/* دکمه شناور موبایل */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed bottom-6 right-6 z-50 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 font-bold text-lg hover:scale-110 transition-all duration-300"
+        className={`lg:hidden fixed bottom-6 z-50 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 font-bold text-lg hover:scale-110 transition-all duration-300 ${isRTL ? "left-6" : "right-6"}`}
       >
         <HiX
           className={`text-2xl transition-transform ${
@@ -136,7 +139,7 @@ export default function AdvancedFilter() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-5 py-3 pl-12 pr-4 rounded-xl border border-gray-300 focus:border-[#304ffe] focus:ring-4 focus:ring-blue-100 transition appearance-none bg-white text-right"
+                    className={`w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-[#304ffe] focus:ring-4 focus:ring-blue-100 transition appearance-none bg-white ${isRTL ? "pl-12 pr-4 text-right" : "pr-12 pl-4 text-left"}`}
                   >
                     <option value="all">{t("filter.allProperties")}</option>
                     <option value="apartment">{t("common.apartment")}</option>
@@ -146,7 +149,7 @@ export default function AdvancedFilter() {
                   </select>
 
                   {/* فلش پیش‌فرض مرورگر رو با فاصله می‌ذاریم سمت چپ */}
-                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                  <div className={`absolute inset-y-0 ${isRTL ? "left-4" : "right-4"} flex items-center pointer-events-none`}>
                     <svg
                       className="w-5 h-5 text-gray-400"
                       fill="none"
@@ -222,7 +225,7 @@ export default function AdvancedFilter() {
 
               {/* دکمه پاک کردن همه — دقیقاً توی خط! */}
               {hasActiveFilter && (
-                <div className="ml-2">
+                <div className={isRTL ? "ml-2" : "mr-2"}>
                   <button
                     onClick={clearFilters}
                     className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2 whitespace-nowrap"

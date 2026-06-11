@@ -1,11 +1,12 @@
 // src/module/VisitRequestModal.jsx
 "use client";
 
-// import DateObject from "react-date-object";
 import { useState } from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
 import DateObject from "react-date-object";
 import {
   BiCalendarCheck,
@@ -15,6 +16,10 @@ import {
   BiTime,
 } from "react-icons/bi";
 import toast from "react-hot-toast";
+import { useTranslations, useLocale } from "next-intl";
+import { isRTLLocale } from "@/utils/locale";
+import { formatTimeSlot } from "@/constants/timeSlots";
+import { translateApiCode } from "@/utils/apiMessages";
 
 export default function VisitRequestModal({
   isOpen,
@@ -24,6 +29,11 @@ export default function VisitRequestModal({
   location,
   visitAvailability = [],
 }) {
+  const t = useTranslations("visitRequestModal");
+  const tAll = useTranslations();
+  const locale = useLocale();
+  const isRTL = isRTLLocale(locale);
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -36,12 +46,23 @@ export default function VisitRequestModal({
   const [availableTimes, setAvailableTimes] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // تبدیل تاریخ‌های مجاز به فرمت DateObject برای react-multi-date-picker
+  const calendar = isRTL ? persian : gregorian;
+  const calendarLocale = isRTL ? persian_fa : gregorian_en;
+  const iconSide = isRTL ? "right-4" : "left-4";
+  const inputPadding = isRTL ? "pr-12 pl-5" : "pl-12 pr-5";
+
   const allowedDates = visitAvailability.map((item) =>
-    new DateObject(new Date(item.date)).set("calendar", persian)
+    new DateObject(new Date(item.date)).convert(calendar)
   );
 
-  // وقتی کاربر تاریخ رو انتخاب کرد
+  const isValidPhone = (phone) => {
+    if (isRTL) {
+      return /^\d{11}$/.test(phone) && phone.startsWith("09");
+    }
+    const digits = phone.replace(/\D/g, "");
+    return digits.length >= 10 && digits.length <= 11;
+  };
+
   const handleDateChange = (date) => {
     if (!date) {
       setForm({ ...form, preferredDate: null, preferredTime: "" });
@@ -63,26 +84,19 @@ export default function VisitRequestModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // اعتبارسنجی
-    if (
-      !form.name ||
-      !form.phone ||
-      !form.preferredDate ||
-      !form.preferredTime
-    ) {
-      toast.error("لطفاً همه فیلدهای الزامی را پر کنید");
+    if (!form.name || !form.phone || !form.preferredDate || !form.preferredTime) {
+      toast.error(t("fillRequired"));
       return;
     }
 
-    if (!/^\d{11}$/.test(form.phone) || !form.phone.startsWith("09")) {
-      toast.error("شماره تلفن باید ۱۱ رقمی و با ۰۹ شروع شود");
+    if (!isValidPhone(form.phone)) {
+      toast.error(t("invalidPhone"));
       return;
     }
 
     setLoading(true);
 
     try {
-      // درست کردن تاریخ — مهم‌ترین خط!
       const dateString = form.preferredDate
         .toDate()
         .toISOString()
@@ -98,7 +112,7 @@ export default function VisitRequestModal({
           name: form.name.trim(),
           phone: form.phone,
           email: form.email.trim() || "",
-          preferredDate: dateString, // ← درست و تضمینی
+          preferredDate: dateString,
           preferredTime: form.preferredTime,
           message: form.message.trim() || "",
         }),
@@ -107,9 +121,7 @@ export default function VisitRequestModal({
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(
-          "درخواست بازدید با موفقیت ثبت شد! مشاور ظرف ۲۴ ساعت تماس می‌گیرد"
-        );
+        toast.success(t("success"));
         onClose();
         setForm({
           name: "",
@@ -121,11 +133,13 @@ export default function VisitRequestModal({
         });
         setAvailableTimes([]);
       } else {
-        toast.error(data.message || "خطا در ارسال درخواست");
+        toast.error(
+          translateApiCode(tAll, data.code) || t("submitError")
+        );
       }
     } catch (err) {
-      console.error("خطا در ارسال درخواست بازدید:", err);
-      toast.error("خطای شبکه. لطفاً دوباره تلاش کنید");
+      console.error("Visit request error:", err);
+      toast.error(t("networkError"));
     } finally {
       setLoading(false);
     }
@@ -133,7 +147,6 @@ export default function VisitRequestModal({
 
   if (!isOpen) return null;
 
-  // اگر هیچ روزی تنظیم نشده
   if (visitAvailability.length === 0) {
     return (
       <div
@@ -144,18 +157,16 @@ export default function VisitRequestModal({
           className="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="text-8xl mb-4">Calendar Off</div>
+          <div className="text-6xl mb-4">📅</div>
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            زمان بازدید تعیین نشده
+            {t("noScheduleTitle")}
           </h3>
-          <p className="text-gray-600 mb-8">
-            مشاور هنوز روز و ساعتی برای بازدید این ملک تعیین نکرده است.
-          </p>
+          <p className="text-gray-600 mb-8">{t("noScheduleDesc")}</p>
           <button
             onClick={onClose}
             className="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-bold hover:bg-gray-300 transition"
           >
-            بستن
+            {t("close")}
           </button>
         </div>
       </div>
@@ -168,24 +179,24 @@ export default function VisitRequestModal({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-500"
+        className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* هدر */}
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-8 text-white sticky top-0 z-10">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
                 <BiCalendarCheck className="text-4xl" />
               </div>
-              <div>
-                <h2 className="text-3xl font-bold">درخواست بازدید حضوری</h2>
-                <p className="text-white/90">رایگان و بدون واسطه</p>
+              <div className="text-start">
+                <h2 className="text-2xl md:text-3xl font-bold">{t("title")}</h2>
+                <p className="text-white/90">{t("subtitle")}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-4xl hover:scale-110 transition"
+              className="text-4xl hover:scale-110 transition shrink-0"
+              aria-label={t("close")}
             >
               ×
             </button>
@@ -199,71 +210,66 @@ export default function VisitRequestModal({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* نام و تلفن و ایمیل */}
             <div className="relative">
-              <BiUser className="absolute left-4 top-6 text-emerald-600 text-xl" />
+              <BiUser className={`absolute ${iconSide} top-1/2 -translate-y-1/2 text-emerald-600 text-xl`} />
               <input
                 type="text"
-                placeholder="نام و نام خانوادگی *"
+                placeholder={t("namePlaceholder")}
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
-                className="w-full pl-12 pr-5 py-5 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none"
+                className={`w-full ${inputPadding} py-4 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none`}
               />
             </div>
 
             <div className="relative">
-              <BiPhone className="absolute left-4 top-6 text-emerald-600 text-xl" />
+              <BiPhone className={`absolute ${iconSide} top-1/2 -translate-y-1/2 text-emerald-600 text-xl`} />
               <input
-                type="text"
-                placeholder="شماره تماس (۰۹۱۲۳۴۵۶۷۸۹) *"
+                type="tel"
+                placeholder={t("phonePlaceholder")}
                 value={form.phone}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    phone: e.target.value.replace(/[^0-9]/g, ""),
+                    phone: e.target.value.replace(/[^0-9+]/g, ""),
                   })
                 }
                 required
-                maxLength="11"
-                className="w-full pl-12 pr-5 py-5 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none"
+                className={`w-full ${inputPadding} py-4 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none`}
+                dir="ltr"
               />
             </div>
 
             <div className="relative">
-              <BiEnvelope className="absolute left-4 top-6 text-emerald-600 text-xl" />
+              <BiEnvelope className={`absolute ${iconSide} top-1/2 -translate-y-1/2 text-emerald-600 text-xl`} />
               <input
                 type="email"
-                placeholder="ایمیل (اختیاری)"
+                placeholder={t("emailPlaceholder")}
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full pl-12 pr-5 py-5 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none"
+                className={`w-full ${inputPadding} py-4 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 outline-none`}
+                dir="ltr"
               />
             </div>
 
-            {/* تاریخ — فقط تاریخ‌های مجاز قابل انتخاب هستند */}
             <div className="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-200">
               <div className="flex items-center gap-3 mb-4">
                 <BiCalendarCheck className="text-2xl text-emerald-700" />
                 <label className="text-xl font-bold text-emerald-800">
-                  تاریخ بازدید *
+                  {t("visitDate")}
                 </label>
               </div>
 
               <DatePicker
                 value={form.preferredDate}
                 onChange={handleDateChange}
-                calendar={persian}
-                locale={persian_fa}
+                calendar={calendar}
+                locale={calendarLocale}
                 minDate={new Date()}
-                // این قسمت‌ها رو اضافه/ویرایش کن:
                 containerClassName="w-full"
-                inputClass="w-full px-6 py-6 bg-white border-2 border-emerald-300 rounded-2xl text-center text-lg font-medium cursor-pointer focus:border-emerald-600 outline-none transition-all"
-                // این قسمت خیلی مهمه — تقویم رو بزرگ و کامل نشون میده
-                // className="rmdp-mobile rmdp-prime w-full"
-                // برای موبایل هم کامل باز بشه
+                inputClass="w-full px-6 py-5 bg-white border-2 border-emerald-300 rounded-2xl text-center text-lg font-medium cursor-pointer focus:border-emerald-600 outline-none transition-all"
                 mobileMode="popup"
-                // استایل روزهای مجاز و غیرمجاز
+                weekStartDayIndex={isRTL ? 6 : 0}
                 mapDays={({ date }) => {
                   const isAllowed = allowedDates.some(
                     (allowed) =>
@@ -289,22 +295,20 @@ export default function VisitRequestModal({
                     },
                   };
                 }}
-                placeholder="فقط روزهای سبز قابل انتخاب هستند"
-                weekStartDayIndex={6} // شنبه اول هفته باشه
+                placeholder={t("dateHint")}
               />
 
               <p className="text-sm text-emerald-700 mt-3 text-center font-medium">
-                فقط روزهای سبز قابل انتخاب هستند
+                {t("dateHint")}
               </p>
             </div>
 
-            {/* ساعت — فقط ساعت‌های مجاز */}
             {form.preferredDate && availableTimes.length > 0 ? (
               <div className="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-200">
                 <div className="flex items-center gap-3 mb-4">
                   <BiTime className="text-2xl text-emerald-700" />
                   <label className="text-xl font-bold text-emerald-800">
-                    ساعت بازدید *
+                    {t("visitTime")}
                   </label>
                 </div>
                 <select
@@ -315,27 +319,26 @@ export default function VisitRequestModal({
                   required
                   className="w-full px-6 py-5 bg-white border-2 border-emerald-300 rounded-2xl focus:border-emerald-600 outline-none cursor-pointer"
                 >
-                  <option value="">یک بازه زمانی انتخاب کنید</option>
+                  <option value="">{t("selectTimeSlot")}</option>
                   {availableTimes.map((time) => (
                     <option key={time} value={time}>
-                      {time}
+                      {formatTimeSlot(time, tAll)}
                     </option>
                   ))}
                 </select>
               </div>
             ) : form.preferredDate ? (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 p-5 rounded-2xl text-center">
-                برای این تاریخ ساعتی تعیین نشده است
+                {t("noTimeForDate")}
               </div>
             ) : null}
 
-            {/* دکمه ارسال */}
             <button
               type="submit"
               disabled={loading || !form.preferredTime}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-6 rounded-2xl font-bold text-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-4"
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-5 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300"
             >
-              {loading ? "در حال ارسال..." : "ارسال درخواست بازدید"}
+              {loading ? t("submitting") : t("submit")}
             </button>
           </form>
         </div>

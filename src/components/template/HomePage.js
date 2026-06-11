@@ -131,84 +131,98 @@ export default function HomePage() {
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50" />
       <div className="relative">
         <div className="container mx-auto px-4 py-12">
-          {/* ==================== هیرو خفن با همه فیچرهای جدید ==================== */}
-          <section className="relative max-w-7xl mx-auto rounded-3xl overflow-hidden shadow-2xl mb-20 mt-8">
-            <Image
-              src={heroBg}
-              alt={t("home.heroImageAlt")}
-              fill
-              priority
-              quality={100}
-              className="object-cover brightness-75"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          {/* ==================== Hero ==================== */}
+          <section className="relative max-w-7xl mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-xl mb-14 mt-4">
+            <div className="absolute inset-0">
+              <Image
+                src={heroBg}
+                alt={t("home.heroImageAlt")}
+                fill
+                priority
+                quality={90}
+                className="object-cover object-center scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/90 via-[#1a3a6b]/75 to-[#0d2847]/85" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.15),_transparent_50%)]" />
+            </div>
 
-            <div className="relative text-center py-24 md:py-36 px-8">
-              {/* شمارنده زنده بالای عنوان با انیمیشن */}
-              <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-8 text-white/90">
-                <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4 border border-white/20">
-                    <p className="text-3xl md:text-5xl font-black bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
-                      {animatedStats.listings.toLocaleString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US')}+
-                  </p>
-                    <p className="text-sm md:text-lg mt-2 flex items-center justify-center gap-2">
-                      <FiHeart className="text-red-400" /> {t("home.activeListings")}
-                    </p>
-                  </div>
+            <div className="relative px-5 py-10 sm:px-8 sm:py-12 md:px-10 md:py-14">
+              <div className="max-w-3xl mx-auto text-center mb-6 md:mb-8">
+                <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-white/90 text-xs font-semibold tracking-wide">
+                    {t("home.activeListings")}
+                  </span>
                 </div>
-                <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4 border border-white/20">
-                    <p className="text-3xl md:text-5xl font-black text-orange-400 animate-pulse">
-                      +{animatedStats.today}
-                  </p>
-                    <p className="text-sm md:text-lg mt-2 flex items-center gap-2 justify-center">
-                      <FiClock className="text-orange-300" /> {t("home.todayAdded")}
-                  </p>
-                  </div>
-                </div>
-                <div className="text-center transform hover:scale-110 transition-transform duration-300">
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4 border border-white/20">
-                  <p className="text-3xl md:text-5xl font-black text-green-400">
-                      {animatedStats.sold.toLocaleString(isRTL ? (locale === 'fa' ? 'fa-IR' : 'ar-SA') : 'en-US')}
-                    </p>
-                    <p className="text-sm md:text-lg mt-2 flex items-center justify-center gap-2">
-                      <FiAward className="text-green-300" /> {t("home.successfulDeals")}
-                  </p>
-                  </div>
-                </div>
+
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-white leading-tight mb-3">
+                  {t("home.title")}
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-blue-100/90 font-medium max-w-xl mx-auto leading-relaxed">
+                  {t("home.subtitle")}
+                </p>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-2xl animate-fade-in-up">
-                <span className="bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent">
-                {t("home.title")}
-                </span>
-              </h1>
-              <p className="text-xl md:text-3xl text-cyan-200 font-bold max-w-5xl mx-auto drop-shadow-2xl mb-10 animate-fade-in-up delay-200">
-                {t("home.subtitle")}
-              </p>
+              {/* Stats strip */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto mb-6 md:mb-8">
+                {[
+                  {
+                    value: `${animatedStats.listings.toLocaleString(isRTL ? (locale === "fa" ? "fa-IR" : "ar-SA") : "en-US")}+`,
+                    label: t("home.activeListings"),
+                    icon: FiHeart,
+                    accent: "text-rose-300",
+                  },
+                  {
+                    value: `+${animatedStats.today}`,
+                    label: t("home.todayAdded"),
+                    icon: FiClock,
+                    accent: "text-amber-300",
+                  },
+                  {
+                    value: animatedStats.sold.toLocaleString(isRTL ? (locale === "fa" ? "fa-IR" : "ar-SA") : "en-US"),
+                    label: t("home.successfulDeals"),
+                    icon: FiAward,
+                    accent: "text-emerald-300",
+                  },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl px-2 py-2.5 sm:px-3 sm:py-3 text-center hover:bg-white/15 transition-colors"
+                  >
+                    <stat.icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mx-auto mb-1 ${stat.accent}`} />
+                    <p className="text-base sm:text-lg md:text-xl font-black text-white leading-none">
+                      {stat.value}
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-white/70 mt-1 leading-tight line-clamp-2">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-              {/* سرچ‌بار ارتقا یافته */}
-              <form
-                onSubmit={handleSearch}
-                className="relative max-w-4xl mx-auto"
-              >
-                <div className="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
-                  <div className="flex flex-col lg:flex-row items-stretch p-4 gap-4">
-                    <div className="flex-1 relative">
-                      <input
-                        type="text"
-                        placeholder={t("common.searchPlaceholder")}
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        className={`w-full ${isRTL ? 'px-14' : 'px-5 pr-14'} py-5 text-lg text-gray-800 bg-transparent outline-none`}
-                      />
-                      <FiMapPin className={`absolute ${isRTL ? 'left-5' : 'right-5'} top-1/2 -translate-y-1/2 text-2xl text-blue-600`} />
-                    </div>
+              {/* Search bar */}
+              <form onSubmit={handleSearch} className="relative max-w-3xl mx-auto">
+                <div className="absolute -inset-px bg-gradient-to-r from-cyan-400/40 via-blue-500/40 to-indigo-500/40 rounded-2xl blur-sm" />
+                <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden p-2.5 sm:p-3 space-y-2.5">
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      placeholder={t("common.searchPlaceholder")}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      className={`w-full ${isRTL ? "pl-11 pr-4" : "pl-4 pr-11"} py-3 text-sm text-gray-800 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 truncate`}
+                    />
+                    <FiMapPin
+                      className={`absolute ${isRTL ? "left-3.5" : "right-3.5"} top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500 pointer-events-none shrink-0`}
+                    />
+                  </div>
 
+                  <div className="grid grid-cols-2 sm:grid-cols-[1fr_1fr_auto] gap-2">
                     <select
                       value={transaction}
                       onChange={(e) => setTransaction(e.target.value)}
-                      className="px-6 py-5 rounded-2xl bg-gray-50 font-bold text-gray-700"
+                      title={transaction}
+                      className="min-w-0 w-full px-3 py-2.5 text-sm font-semibold text-gray-700 bg-gray-50 rounded-xl outline-none cursor-pointer truncate"
                     >
                       <option>{t("common.buy")}</option>
                       <option>{t("common.rent")}</option>
@@ -219,7 +233,8 @@ export default function HomePage() {
                     <select
                       value={propertyType}
                       onChange={(e) => setPropertyType(e.target.value)}
-                      className="px-6 py-5 rounded-2xl bg-gray-50 font-bold text-gray-700"
+                      title={propertyType}
+                      className="min-w-0 w-full px-3 py-2.5 text-sm font-semibold text-gray-700 bg-gray-50 rounded-xl outline-none cursor-pointer truncate"
                     >
                       <option>{t("common.allProperties")}</option>
                       <option>{t("common.apartment")}</option>
@@ -230,30 +245,19 @@ export default function HomePage() {
 
                     <button
                       type="submit"
-                      className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-12 py-5 rounded-2xl font-black text-lg shadow-xl hover:scale-105 transition-all flex items-center gap-3"
+                      className="col-span-2 sm:col-span-1 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all flex items-center justify-center gap-2"
                     >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                       {t("common.search")}
                     </button>
                   </div>
                 </div>
-                <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/30 via-cyan-500/30 to-blue-600/30 blur-3xl -z-10 animate-pulse" />
               </form>
 
-              {/* تگ‌های سریع زیر سرچ‌بار */}
-              <div className="flex flex-wrap justify-center gap-3 mt-8 animate-fade-in-up delay-300">
+              {/* Quick tags */}
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-4 max-w-2xl mx-auto">
                 {[
                   t("home.quickTags.newBuild"),
                   t("home.quickTags.withParking"),
@@ -261,14 +265,18 @@ export default function HomePage() {
                   t("home.quickTags.freeView"),
                   t("home.quickTags.specialDiscount"),
                   t("home.quickTags.dailyRent"),
-                ].map((tag, index) => (
-                  <span
+                ].map((tag) => (
+                  <button
                     key={tag}
-                    className="bg-white/20 backdrop-blur-md text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-white/30 hover:scale-110 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    type="button"
+                    onClick={() => {
+                      setQuery(tag);
+                      router.push(`/search?q=${encodeURIComponent(tag)}`);
+                    }}
+                    className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 hover:text-white px-3 py-1 rounded-full text-xs font-medium border border-white/10 hover:border-white/25 transition-all"
                   >
                     {tag}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>

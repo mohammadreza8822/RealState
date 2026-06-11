@@ -11,10 +11,11 @@ export default function Footer() {
   const isRTL = locale === "fa" || locale === "ar";
 
   // اسمت رو اینجا عوض کن
-  const developerName = "محمدرضا اصغری";
-  const linkedinUrl =
-    "https://www.linkedin.com/in/mohammadreza-asghary-3b6a54322/";
-  const githubUrl = "https://github.com/mohammadreza8822";
+  // const developerName = "محمدرضا اصغری";
+  const developerName = "Hamed Yarmohammadi";
+  // const linkedinUrl =
+  //   "https://www.linkedin.com/in/mohammadreza-asghary-3b6a54322/";
+  // const githubUrl = "https://github.com/mohammadreza8822";
 
   const textAlign = isRTL ? "md:text-right" : "md:text-left";
   const itemsAlign = isRTL ? "md:items-end" : "md:items-start";
@@ -104,12 +105,12 @@ export default function Footer() {
             {/* <p className="text-gray-700 text-sm font-medium whitespace-nowrap">
               طراحی و توسعه توسط جاسم الباسط
             </p> */}
-            <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
+            <div className={`flex items-center gap-3 mt-2 justify-center ${isRTL ? "md:justify-end" : "md:justify-start"}`}>
                 <span className="font-bold text-[#304ffe]">
                   {developerName}
                 </span>
                 <div className="flex gap-2">
-                  <a
+                  {/* <a
                     href={linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -124,11 +125,11 @@ export default function Footer() {
                     className="text-gray-600 hover:text-[#304ffe] transition-colors"
                   >
                     <FiGithub className="text-xl" />
-                  </a>
+                  </a> */}
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2 flex items-center gap-1 justify-center md:justify-start">
-                ساخته شده با <FiHeart className="text-red-500" /> در ایران
+              <p className={`text-xs text-gray-500 mt-2 flex items-center gap-1 justify-center ${isRTL ? "md:justify-end" : "md:justify-start"}`}>
+                <FiHeart className="text-red-500" /> {t("footer.designedBy")}
               </p>
              </div>
           </div>
