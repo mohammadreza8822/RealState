@@ -1,12 +1,10 @@
 // app/buy-residential/[profileId]/page.js
-import Profile from "@/models/Profile";
 import DetailsPage from "@/template/DetailsPage";
-import connectDB from "@/utils/connectDB";
+import { getProfileById } from "@/lib/repository";
 
-async function ProfileDetail({ params: { profileId } }) {
-  await connectDB();
-
-  const profile = await Profile.findOne({ _id: profileId });
+async function ProfileDetail({ params }) {
+  const { profileId } = await params;
+  const profile = await getProfileById(profileId);
 
   if (!profile) {
     return (
@@ -16,21 +14,14 @@ async function ProfileDetail({ params: { profileId } }) {
     );
   }
 
-  // این خط جادویی مشکل رو حل می‌کنه
-  const plainProfile = JSON.parse(JSON.stringify(profile));
-
-  // یا می‌تونی از این روش هم استفاده کنی (کمی تمیزتر):
-  // const plainProfile = profile.toObject ? profile.toObject() : profile;
-
-  return <DetailsPage data={plainProfile} />;
+  return <DetailsPage data={profile} />;
 }
 
 export default ProfileDetail;
 
-// متادیتا هم درست کن (همین مشکل رو داره!)
-export const generateMetadata = async ({ params: { profileId } }) => {
-  await connectDB();
-  const profile = await Profile.findOne({ _id: profileId });
+export const generateMetadata = async ({ params }) => {
+  const { profileId } = await params;
+  const profile = await getProfileById(profileId);
 
   if (!profile) {
     return {
@@ -39,11 +30,8 @@ export const generateMetadata = async ({ params: { profileId } }) => {
     };
   }
 
-  // اینجا هم باید تبدیل به plain object کنی
-  const plainProfile = JSON.parse(JSON.stringify(profile));
-
   return {
-    title: plainProfile.title || "آگهی املاک",
-    description: plainProfile.description || "جزئیات آگهی املاک",
+    title: profile.title || "آگهی املاک",
+    description: profile.description || "جزئیات آگهی املاک",
   };
 };

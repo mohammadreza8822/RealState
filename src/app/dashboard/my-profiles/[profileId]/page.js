@@ -1,18 +1,19 @@
-import Profile from "@/models/Profile";
 import AddProfilePage from "@/template/AddProfilePage";
-import connectDB from "@/utils/connectDB";
+import { getProfileById } from "@/lib/repository";
 
-async function Edit({ params: { profileId } }) {
-  await connectDB();
-  const profile = await Profile.findOne({ _id: profileId });
+export const dynamic = "force-dynamic";
+
+async function Edit({ params }) {
+  const { profileId } = await params;
+  const profile = await getProfileById(profileId);
 
   if (!profile) {
-    return <h3>Something went wrong, please try again</h3>;
+    return <h3>خطایی رخ داده است. لطفاً دوباره تلاش کنید.</h3>;
   }
 
   return (
     <div>
-      <AddProfilePage data={JSON.parse(JSON.stringify(profile))} />
+      <AddProfilePage data={profile} />
     </div>
   );
 }

@@ -1,19 +1,12 @@
-// app/api/superadmin/approve-agent/route.js   ←← این مسیر درست باشه
-
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
+import { findUserById, updateUserById } from "@/lib/repository";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    await connectDB();
-
     const { userId } = await request.json();
-
-    // تبدیل ObjectId به string (این خط خیلی مهمه!)
     const id = userId.toString();
 
-    const user = await User.findById(id);
+    const user = await findUserById(id);
 
     if (!user) {
       return NextResponse.json({ error: "کاربر یافت نشد" }, { status: 404 });
@@ -26,8 +19,7 @@ export async function POST(request) {
       );
     }
 
-    // تبدیل به ADMIN = مشاور فعال
-    await User.findByIdAndUpdate(id, {
+    await updateUserById(id, {
       role: "ADMIN",
       agentStatus: "approved",
       agentApprovedAt: new Date(),

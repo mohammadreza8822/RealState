@@ -1,16 +1,10 @@
 // app/api/visit-request/route.js
-import connectDB from "@/utils/connectDB";
-import VisitRequest from "@/models/VisitRequest";
+import { createVisitRequest } from "@/lib/repository";
 
 export async function POST(request) {
   try {
-    await connectDB();
     const body = await request.json();
 
-    // لاگ برای دیباگ (بعداً می‌تونی حذف کنی)
-    console.log("دریافت درخواست بازدید:", body);
-
-    // اعتبارسنجی ضروری
     const {
       listingId,
       listingTitle,
@@ -44,14 +38,11 @@ export async function POST(request) {
       );
     }
 
-    // تبدیل تاریخ از رشته به Date — نسخه ضدگلوله!
     let visitDate;
     try {
-      // روش ۱: استفاده از تاریخ محلی (بهترین روش برای تاریخ بدون ساعت)
       const [year, month, day] = preferredDate.split("-").map(Number);
-      visitDate = new Date(year, month - 1, day); // ماه در جاوااسکریپت از 0 شروع میشه
+      visitDate = new Date(year, month - 1, day);
 
-      // چک کنیم تاریخ معتبر باشه
       if (
         visitDate.getFullYear() !== year ||
         visitDate.getMonth() !== month - 1 ||
@@ -59,12 +50,11 @@ export async function POST(request) {
       ) {
         throw new Error("تاریخ خارج از محدوده");
       }
-    } catch (err) {
+    } catch {
       return Response.json({ message: "تاریخ نامعتبر است" }, { status: 400 });
     }
 
-    // ساخت درخواست
-    const newRequest = await VisitRequest.create({
+    const newRequest = await createVisitRequest({
       listingId,
       listingTitle,
       location,
@@ -75,8 +65,6 @@ export async function POST(request) {
       preferredTime: preferredTime.trim(),
       message: message.trim(),
     });
-
-    console.log("درخواست بازدید با موفقیت ذخیره شد:", newRequest._id);
 
     return Response.json(
       {

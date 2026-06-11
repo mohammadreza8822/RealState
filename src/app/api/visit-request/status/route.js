@@ -1,13 +1,10 @@
 // app/api/visit-request/status/route.js
 
 import { NextResponse } from "next/server";
-import VisitRequest from "@/models/VisitRequest";
-import connectDB from "@/utils/connectDB";
+import { updateVisitRequestStatus } from "@/lib/repository";
 
 export async function PATCH(request) {
   try {
-    await connectDB();
-
     const { requestId, status } = await request.json();
 
     if (!requestId || !status) {
@@ -17,11 +14,7 @@ export async function PATCH(request) {
       );
     }
 
-    const updated = await VisitRequest.findByIdAndUpdate(
-      requestId,
-      { status },
-      { new: true }
-    );
+    const updated = await updateVisitRequestStatus(requestId, status);
 
     if (!updated) {
       return NextResponse.json(

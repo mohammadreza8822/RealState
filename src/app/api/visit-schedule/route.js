@@ -1,25 +1,21 @@
 // app/api/visit-schedule/route.js
-import connectDB from "@/utils/connectDB";
-import Profile from "@/models/Profile";
+import {
+  addVisitAvailability,
+  removeVisitAvailability,
+} from "@/lib/repository";
 
 export async function POST(req) {
-  await connectDB();
   const { listingId, date, timeSlots } = await req.json();
 
-  await Profile.findByIdAndUpdate(listingId, {
-    $push: { visitAvailability: { date, timeSlots } },
-  });
+  await addVisitAvailability(listingId, date, timeSlots);
 
   return Response.json({ success: true });
 }
 
 export async function DELETE(req) {
-  await connectDB();
   const { listingId, date } = await req.json();
 
-  await Profile.findByIdAndUpdate(listingId, {
-    $pull: { visitAvailability: { date } },
-  });
+  await removeVisitAvailability(listingId, date);
 
   return Response.json({ success: true });
 }

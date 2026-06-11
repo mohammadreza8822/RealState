@@ -4,8 +4,8 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import ListingImage from "@/module/ListingImage";
 
 import { BiCalendarCheck } from "react-icons/bi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -72,13 +72,15 @@ export default function DetailsPage({
               {/* عکس اصلی */}
               <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                 <div className="relative h-[400px] md:h-[500px] group">
+                  <div className="absolute top-4 right-4 z-20">
+                    <FavoriteButton adId={_id} size="large" />
+                  </div>
+
                   {mainImage ? (
-                    <Image
+                    <ListingImage
                       src={mainImage}
                       alt={title}
-                      fill
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      unoptimized
                       priority
                     />
                   ) : (
@@ -92,11 +94,11 @@ export default function DetailsPage({
                     </div>
                   )}
                   <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-[#304ffe] to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg z-10">
                     {categories[category]}
                   </div>
                   {Array.isArray(image) && image.length > 1 && (
-                    <div className={`absolute top-4 ${locale === 'fa' || locale === 'ar' ? 'right-4' : 'left-4'} bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-bold text-[#304ffe] shadow-lg`}>
+                    <div className="absolute top-14 left-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-sm font-bold text-[#304ffe] shadow-lg z-10">
                       {image.length} {t("detailsPage.photos")}
                     </div>
                   )}
@@ -105,17 +107,12 @@ export default function DetailsPage({
 
               {/* عنوان + علاقه‌مندی */}
               <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <h1 className="text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
-                      {title}
-                    </h1>
-                    <div className="flex items-center gap-3 text-lg text-gray-600">
-                      <HiOutlineLocationMarker className="text-2xl text-[#304ffe]" />
-                      <span className="font-medium">{location}</span>
-                    </div>
-                  </div>
-                  <FavoriteButton adId={_id} size="large" />
+                <h1 className="text-4xl font-extrabold text-gray-800 mb-4 leading-tight">
+                  {title}
+                </h1>
+                <div className="flex items-center gap-3 text-lg text-gray-600">
+                  <HiOutlineLocationMarker className="text-2xl text-[#304ffe]" />
+                  <span className="font-medium">{location}</span>
                 </div>
               </div>
 
@@ -170,7 +167,9 @@ export default function DetailsPage({
 
                   <div className="text-center">
                     <p className="text-3xl font-black text-[#304ffe]">
-                      {sp(price)} {locale === 'fa' ? 'تومان' : locale === 'ar' ? 'ريال' : 'Toman'}
+                      {locale === 'fa' || locale === 'ar'
+                        ? `${sp(price)} ${locale === 'fa' ? 'تومان' : 'ريال'}`
+                        : `$${price.toLocaleString('en-US')}`}
                     </p>
                   </div>
 

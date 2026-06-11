@@ -1,28 +1,25 @@
 // app/api/profile/route.js
 
 import { NextResponse } from "next/server";
-import connectDB from "@/utils/connectDB";
-import User from "@/models/User";
-import Profile from "@/models/Profile";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { getServerSession } from "next-auth";
+import {
+  getPublishedProfiles,
+  findUserByEmail,
+  createProfile,
+  updateProfile,
+  getProfileById,
+} from "@/lib/repository";
 
 const uploadDir = path.join(process.cwd(), "public/uploads");
 
 // مطمئن شو که پوشه uploads وجود داره
 await mkdir(uploadDir, { recursive: true });
 
-// اضافه کن بالای POST و PATCH
 export async function GET() {
   try {
-    await connectDB();
-
-    const profiles = await Profile.find({ published: true })
-      .select("-userId -__v")
-      .sort({ createdAt: -1 })
-      .lean();
-
+    const profiles = await getPublishedProfiles();
     return NextResponse.json({ data: profiles }, { status: 200 });
   } catch (err) {
     console.error("خطا در GET /api/profile:", err);
@@ -35,8 +32,6 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    await connectDB();
-
     const formData = await req.formData();
     const session = await getServerSession();
 
@@ -47,12 +42,11 @@ export async function POST(req) {
       );
     }
 
-    const user = await User.findOne({ email: session.user.email });
+    const user = await findUserByEmail(session.user.email);
     if (!user) {
       return NextResponse.json({ error: "کاربر یافت نشد" }, { status: 404 });
     }
 
-    // دریافت داده‌های متنی
     const title = formData.get("title");
     const description = formData.get("description");
     const location = formData.get("location");
@@ -63,7 +57,6 @@ export async function POST(req) {
     const category = formData.get("category");
     const constructionDate = formData.get("constructionDate");
 
-    // دریافت آرایه‌ها (amenities و rules)
     const amenities = [];
     const rules = [];
     for (const [key, value] of formData.entries()) {
@@ -71,7 +64,6 @@ export async function POST(req) {
       if (key.startsWith("rules[")) rules.push(value);
     }
 
-    // اعتبارسنجی
     if (
       !title ||
       !description ||
@@ -88,7 +80,6 @@ export async function POST(req) {
       );
     }
 
-    // آپلود عکس‌ها
     const images = [];
     const files = formData.getAll("images");
 
@@ -102,8 +93,7 @@ export async function POST(req) {
       }
     }
 
-    // ایجاد آگهی جدید
-    await Profile.create({
+    await createProfile({
       title,
       description,
       location,
@@ -115,7 +105,7 @@ export async function POST(req) {
       category,
       amenities,
       rules,
-      images, // آرایه از مسیر عکس‌ها
+      image: images[0] || null,
       userId: user._id,
       published: true,
     });
@@ -135,8 +125,6 @@ export async function POST(req) {
 
 export async function PATCH(req) {
   try {
-    await connectDB();
-
     const formData = await req.formData();
     const session = await getServerSession();
 
@@ -147,11 +135,10 @@ export async function PATCH(req) {
       );
     }
 
-    const user = await User.findOne({ email: session.user.email });
+    const user = await findUserByEmail(session.user.email);
     if (!user)
       return NextResponse.json({ error: "کاربر یافت نشد" }, { status: 404 });
 
-    // دریافت _id از فرم (مثلاً از یک input مخفی یا از URL)
     const _id = formData.get("_id");
     if (!_id)
       return NextResponse.json(
@@ -159,37 +146,23 @@ export async function PATCH(req) {
         { status: 400 }
       );
 
-    const profile = await Profile.findOne({ _id });
+    const profile = await getProfileById(_id);
     if (!profile)
       return NextResponse.json({ error: "آگهی یافت نشد" }, { status: 404 });
-    if (!profile.userId.equals(user._id)) {
+    if (String(profile.userId) !== String(user._id)) {
       return NextResponse.json({ error: "دسترسی محدود" }, { status: 403 });
     }
 
-    // بروزرسانی فیلدها
-    profile.title = formData.get("title");
-    profile.description = formData.get("description");
-    profile.location = formData.get("location");
-    profile.phone = formData.get("phone");
-    profile.realState = formData.get("realState");
-    profile.price = Number(formData.get("price"));
-    profile.size = Number(formData.get("size"));
-    profile.category = formData.get("category");
-    profile.constructionDate = new Date(formData.get("constructionDate"));
-
-    // بروزرسانی امکانات و قوانین
-    profile.amenities = [];
-    profile.rules = [];
+    const amenities = [];
+    const rules = [];
     for (const [key, value] of formData.entries()) {
-      if (key.startsWith("amenities[")) profile.amenities.push(value);
-      if (key.startsWith("rules[")) profile.rules.push(value);
+      if (key.startsWith("amenities[")) amenities.push(value);
+      if (key.startsWith("rules[")) rules.push(value);
     }
 
-    // مدیریت عکس‌ها
     const existingImages = formData.getAll("existingImages");
     const newFiles = formData.getAll("images");
 
-    // عکس‌های جدید رو اضافه کن
     for (const file of newFiles) {
       if (file && file.size > 0) {
         const buffer = Buffer.from(await file.arrayBuffer());
@@ -199,9 +172,20 @@ export async function PATCH(req) {
       }
     }
 
-    profile.images = existingImages; // فقط عکس‌هایی که کاربر نگه داشته + جدیدها
-
-    await profile.save();
+    await updateProfile(_id, {
+      title: formData.get("title"),
+      description: formData.get("description"),
+      location: formData.get("location"),
+      phone: formData.get("phone"),
+      realState: formData.get("realState"),
+      price: Number(formData.get("price")),
+      size: Number(formData.get("size")),
+      category: formData.get("category"),
+      constructionDate: new Date(formData.get("constructionDate")),
+      amenities,
+      rules,
+      image: existingImages[0] || profile.image,
+    });
 
     return NextResponse.json(
       { message: "آگهی با موفقیت‌آمیز ویرایش شد" },

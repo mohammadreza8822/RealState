@@ -1,7 +1,5 @@
 import BuyResidentialPage from "@/template/BuyResidentialPage";
-import connectDB from "@/utils/connectDB";
-import User from "@/models/User";
-import Profile from "@/models/Profile";
+import { getFavoriteProfiles } from "@/lib/repository";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -18,10 +16,9 @@ export default async function FavoritesPage() {
     );
   }
 
-  await connectDB();
-  const user = await User.findOne({ email: session.user.email });
-  
-  if (!user || !user.favorites || !Array.isArray(user.favorites) || user.favorites.length === 0) {
+  const favorites = await getFavoriteProfiles(session.user.email);
+
+  if (!favorites.length) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
         <div className="container mx-auto max-w-7xl">
@@ -36,24 +33,13 @@ export default async function FavoritesPage() {
     );
   }
 
-  const favorites = await Profile.find({
-    _id: { $in: user.favorites },
-    published: true,
-  });
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4">
       <div className="container mx-auto max-w-7xl">
         <h1 className="text-5xl font-extrabold text-center text-[#304ffe] mb-10">
           علاقه‌مندی‌های من
         </h1>
-        {favorites.length === 0 ? (
-          <p className="text-center text-xl text-gray-600">
-            هنوز آگهی ذخیره نکرده‌اید
-          </p>
-        ) : (
-          <BuyResidentialPage data={favorites} />
-        )}
+        <BuyResidentialPage data={favorites} />
       </div>
     </div>
   );

@@ -1,19 +1,12 @@
-// app/api/superadmin/reject-agent/route.js
-
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
+import { updateUserById } from "@/lib/repository";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    await connectDB();
-
     const { userId } = await request.json();
     const id = userId.toString();
 
-    await User.findByIdAndUpdate(id, {
-      agentStatus: "rejected",
-    });
+    await updateUserById(id, { agentStatus: "rejected" });
 
     return NextResponse.json({ message: "درخواست با موفقیت رد شد" });
   } catch (error) {

@@ -1,6 +1,5 @@
 // app/dashboard/contact-us/page.js
-import connectDB from "@/utils/connectDB";
-import ContactUs from "@/models/ContactUs"; // مرحله ۲ این مدل رو می‌سازیم
+import { getContactMessages } from "@/lib/repository";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getTranslations, getLocale } from "next-intl/server";
@@ -34,8 +33,7 @@ export default async function ContactUsAnswers() {
     );
   }
 
-  await connectDB();
-  const messages = await ContactUs.find({}).sort({ createdAt: -1 }).lean();
+  const messages = await getContactMessages();
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

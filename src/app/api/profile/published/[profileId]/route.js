@@ -1,46 +1,38 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import connectDB from "@/utils/connectDB";
-import Profile from "@/models/Profile";
-import User from "@/models/User";
+import {
+  findUserByEmail,
+  publishProfile,
+  deleteProfile,
+  getProfileById,
+} from "@/lib/repository";
 
 export async function PATCH(req, context) {
   try {
-    await connectDB();
-
-    const id = context.params.profileId;
+    const { profileId: id } = await context.params;
 
     const session = await getServerSession(req);
     if (!session) {
       return NextResponse.json(
-        {
-          error: "لطفا وارد حساب کاربری خود شوید",
-        },
+        { error: "لطفا وارد حساب کاربری خود شوید" },
         { status: 401 }
       );
     }
 
-    const user = await User.findOne({ email: session.user.email });
+    const user = await findUserByEmail(session.user.email);
     if (!user) {
-      return NextResponse.json(
-        {
-          error: "حساب کاربری یافت نشد",
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "حساب کاربری یافت نشد" }, { status: 404 });
     }
     if (user.role !== "ADMIN") {
-      return NextResponse.json(
-        { error: "دسترسی محدود" },
-        {
-          status: 403,
-        }
-      );
+      return NextResponse.json({ error: "دسترسی محدود" }, { status: 403 });
     }
 
-    const profile = await Profile.findOne({ _id: id });
-    profile.published = true;
-    profile.save();
+    const profile = await getProfileById(id);
+    if (!profile) {
+      return NextResponse.json({ error: "آگهی یافت نشد" }, { status: 404 });
+    }
+
+    await publishProfile(id);
 
     return NextResponse.json({ message: "آگهی منتشر شد" }, { status: 200 });
   } catch (err) {
@@ -54,21 +46,17 @@ export async function PATCH(req, context) {
 
 export async function DELETE(req, context) {
   try {
-    await connectDB();
-
-    const id = context.params.profileId;
+    const { profileId: id } = await context.params;
 
     const session = await getServerSession(req);
     if (!session) {
       return NextResponse.json(
-        {
-          error: "لطفا وارد حساب کاربری خود شوید.",
-        },
+        { error: "لطفا وارد حساب کاربری خود شوید." },
         { status: 401 }
       );
     }
 
-    const user = await User.findOne({ email: session.user.email });
+    const user = await findUserByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
         { error: "حساب کاربری شما یافت نشد!" },
@@ -76,7 +64,7 @@ export async function DELETE(req, context) {
       );
     }
 
-    await Profile.deleteOne({ _id: id });
+    await deleteProfile(id);
 
     return NextResponse.json(
       { message: "آگهی مورد نظر حذف شد" },

@@ -1,26 +1,24 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import connectDB from "@/utils/connectDB";
-import Profile from "@/models/Profile";
-import User from "@/models/User";
+import {
+  findUserByEmail,
+  getProfileById,
+  deleteProfile,
+} from "@/lib/repository";
 
 export async function DELETE(req, context) {
   try {
-    await connectDB();
-
-    const id = context.params.profileId;
+    const { profileId: id } = await context.params;
 
     const session = await getServerSession(req);
     if (!session) {
       return NextResponse.json(
-        {
-          error: "لطفا وارد حساب کاربری خود شوید.",
-        },
+        { error: "لطفا وارد حساب کاربری خود شوید." },
         { status: 401 }
       );
     }
 
-    const user = await User.findOne({ email: session.user.email });
+    const user = await findUserByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
         { error: "حساب کاربری شما یافت نشد!" },
@@ -28,15 +26,18 @@ export async function DELETE(req, context) {
       );
     }
 
-    const profile = await Profile.findOne({ _id: id });
-    if (!user._id.equals(profile.userId)) {
+    const profile = await getProfileById(id);
+    if (!profile) {
+      return NextResponse.json({ error: "آگهی یافت نشد" }, { status: 404 });
+    }
+    if (String(profile.userId) !== String(user._id)) {
       return NextResponse.json(
         { error: "دسترسی شما به آگهی محدود شده است" },
         { status: 403 }
       );
     }
 
-    await Profile.deleteOne({ _id: id });
+    await deleteProfile(id);
 
     return NextResponse.json(
       { message: "آگهی مورد نظر حذف شد" },

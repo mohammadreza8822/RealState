@@ -1,34 +1,12 @@
 // src/app/admin/visit-requests/page.jsx
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/api/auth/[...nextauth]/route";
-import connectDB from "@/utils/connectDB";
-import VisitRequest from "@/models/VisitRequest";
-import Profile from "@/models/Profile";
 import AdminVisitRequestsTable from "@/module/AdminVisitRequestsTable";
+import { getEnrichedVisitRequests } from "@/lib/visitRequests";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export const metadata = { title: "مدیریت درخواست‌های بازدید | ادمین" };
-
-async function getRequests() {
-  await connectDB();
-  const requests = await VisitRequest.find({}).sort({ createdAt: -1 }).lean();
-
-  const enriched = await Promise.all(
-    requests.map(async (req) => {
-      const listing = await Profile.findById(req.listingId)
-        .select("title image")
-        .lean();
-      return {
-        ...req,
-        listingTitle: listing?.title || "آگهی حذف شده",
-        listingImage: listing?.image?.[0] || null,
-      };
-    })
-  );
-
-  return JSON.parse(JSON.stringify(enriched)); // برای سریالایز شدن در کلاینت
-}
 
 export default async function VisitRequestsPage() {
   const session = await getServerSession(authOptions);
@@ -47,7 +25,7 @@ export default async function VisitRequestsPage() {
     );
   }
 
-  const requests = await getRequests();
+  const requests = await getEnrichedVisitRequests();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4">

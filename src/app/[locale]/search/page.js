@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { useState, useEffect } from "react";
 import { Link } from "@/i18n/routing";
-import Image from "next/image";
+import ListingImage from "@/module/ListingImage";
 
 export default function SearchPage() {
   const t = useTranslations();
@@ -96,10 +96,9 @@ export default function SearchPage() {
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
                   <div className="relative h-64 bg-gray-100">
                     {ad.image ? (
-                      <Image
+                      <ListingImage
                         src={ad.image}
                         alt={ad.title}
-                        fill
                         className="object-cover"
                       />
                     ) : (
@@ -124,7 +123,9 @@ export default function SearchPage() {
 
                     <div className="mt-5 flex items-center justify-between">
                       <span className="text-2xl font-extrabold text-[#304ffe]">
-                        {ad.price.toLocaleString(locale === 'fa' ? 'fa-IR' : locale === 'ar' ? 'ar-SA' : 'en-US')} {locale === 'fa' ? 'تومان' : locale === 'ar' ? 'ريال' : 'Toman'}
+                        {locale === 'fa' || locale === 'ar'
+                          ? `${ad.price.toLocaleString(locale === 'fa' ? 'fa-IR' : 'ar-SA')} ${locale === 'fa' ? 'تومان' : 'ريال'}`
+                          : `$${ad.price.toLocaleString('en-US')}`}
                       </span>
                       <span className="bg-blue-100 text-[#304ffe] px-4 py-2 rounded-full text-sm font-bold">
                         {ad.published ? t("buyResidential.published") : t("buyResidential.pending")}

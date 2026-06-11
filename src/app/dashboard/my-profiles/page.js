@@ -1,32 +1,19 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/api/auth/[...nextauth]/route";
-import Profile from "@/models/Profile";
-import connectDB from "@/utils/connectDB";
-import User from "@/models/User";
 import MyProfilesPage from "@/template/MyProfilesPage";
+import { getUserWithProfiles } from "@/lib/repository";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 async function MyProfiles() {
-  await connectDB();
   const session = await getServerSession(authOptions);
-  
+
   if (!session || !session.user) {
     redirect("/signin");
   }
 
-  const [user] = await User.aggregate([
-    { $match: { email: session.user.email } },
-    {
-      $lookup: {
-        from: "profiles",
-        foreignField: "userId",
-        localField: "_id",
-        as: "profiles",
-      },
-    },
-  ]);
+  const user = await getUserWithProfiles(session.user.email);
 
   if (!user) {
     return <MyProfilesPage profiles={[]} />;

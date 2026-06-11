@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
 import { hashPassword } from "@/utils/auth";
+import { findUserByEmail, createUser } from "@/lib/repository";
 
 export async function POST(req) {
   try {
-    await connectDB();
-
     const { email, password, requestAgent } = await req.json();
 
-    // اعتبارسنجی
     if (!email || !password) {
       return NextResponse.json(
         { error: "ایمیل و رمز عبور الزامی است" },
@@ -17,8 +13,7 @@ export async function POST(req) {
       );
     }
 
-    // بررسی تکراری بودن ایمیل
-    const existingUser = await User.findOne({ email });
+    const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: "این ایمیل قبلاً ثبت شده است" },
@@ -26,11 +21,9 @@ export async function POST(req) {
       );
     }
 
-    // هش رمز
     const hashedPassword = await hashPassword(password);
 
-    // ایجاد کاربر — همیشه با نقش USER
-    const newUser = await User.create({
+    const newUser = await createUser({
       email,
       password: hashedPassword,
       role: "USER",
@@ -38,13 +31,6 @@ export async function POST(req) {
       agentRequestedAt: requestAgent ? new Date() : null,
     });
 
-    console.log("کاربر جدید ثبت شد:", {
-      email: newUser.email,
-      role: newUser.role,
-      agentStatus: newUser.agentStatus,
-    });
-
-    // پیام متفاوت برای مشاور و کاربر عادی
     const message = requestAgent
       ? "ثبت‌نام انجام شد! درخواست شما برای مشاور شدن در انتظار تأیید مدیر است"
       : "حساب کاربری با موفقیت ایجاد شد!";

@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import ListingImage from "@/module/ListingImage";
 
 const categoryPersian = {
   villa: "خانه ویلایی",
@@ -100,10 +100,9 @@ export default function SearchPage() {
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
                   <div className="relative h-64 bg-gray-100">
                     {ad.image ? (
-                      <Image
+                      <ListingImage
                         src={ad.image}
                         alt={ad.title}
-                        fill
                         className="object-cover"
                       />
                     ) : (

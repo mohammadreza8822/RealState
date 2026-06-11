@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
+import {
+  getUsersExcludingSuperadmin,
+  findUserByEmail,
+  updateUserByEmail,
+} from "@/lib/repository";
 
 export async function GET() {
   try {
-    await connectDB();
-    // فیلتر کردن کاربران - عدم نمایش SUPERADMIN ها
-    const users = await User.find(
-      { role: { $ne: "SUPERADMIN" } },
-      { password: 0 }
-    ).sort({ createdAt: -1 });
+    const users = await getUsersExcludingSuperadmin();
     return NextResponse.json({ data: users }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
@@ -21,8 +19,6 @@ export async function GET() {
 
 export async function PATCH(req) {
   try {
-    await connectDB();
-
     const body = await req.json();
     const { email, role } = body;
 
@@ -30,12 +26,11 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "اطلاعات ناقص است" }, { status: 400 });
     }
 
-    const user = await User.findOne({ email });
+    const user = await findUserByEmail(email);
     if (!user) {
       return NextResponse.json({ error: "کاربر یافت نشد" }, { status: 404 });
     }
 
-    // چک کردن اینکه کاربر SUPERADMIN نباشد
     if (user.role === "SUPERADMIN") {
       return NextResponse.json(
         { error: "امکان تغییر نقش SUPERADMIN وجود ندارد" },
@@ -43,8 +38,7 @@ export async function PATCH(req) {
       );
     }
 
-    user.role = role;
-    await user.save();
+    await updateUserByEmail(email, { role });
 
     return NextResponse.json(
       { message: "نقش کاربر با موفقیت تغییر کرد" },
